@@ -1,3 +1,13 @@
 from django.shortcuts import render
+import json
 
-# Create your views here.
+## pyrebase initalization
+
+# with open("config.json","r") as f:
+#     firebaseConfig = json.load(f)
+
+
+
+
+## Create your views here.
+
