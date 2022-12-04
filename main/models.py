@@ -26,7 +26,7 @@ class Profile(models.Model):
 class Listings(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="listings")
     image=models.TextField(default="")
-    date_listed=models.DateTimeField(default=datetime.datetime.now.strftime("%m/%d/%Y, %H:%M:%S"))
+    date_listed=models.DateTimeField(default=datetime.datetime.now)
     available=models.BooleanField(default=False)
     description=models.TextField()
     location=models.CharField(max_length=100)
