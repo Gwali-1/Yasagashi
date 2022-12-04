@@ -5,7 +5,7 @@ import datetime
 
 # Create your models here.
 
-class User(models.Model):
+class User(AbstractUser):
     pass
 
 
