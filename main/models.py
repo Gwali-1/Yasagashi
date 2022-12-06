@@ -30,6 +30,7 @@ class Listings(models.Model):
     available=models.BooleanField(default=False)
     description=models.TextField()
     location=models.CharField(max_length=100)
+    price=models.FloatField(default=0.00)
     accomodation_type=models.CharField(max_length=100)
 
     def __str__(self):

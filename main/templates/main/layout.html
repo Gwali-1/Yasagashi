@@ -11,12 +11,12 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar sticky-top navbar-expand-md border pb-3  ">
-        <div class="container-lg  mt-3">
+    <nav class="navbar navv sticky-top navbar-expand-md bg-success border pb-3  ">
+        <div class="container-lg  mt-3 ">
             <!-- navbar brand -->
             <a href="/" class="navbar-brand  " >
                 <span class="fw-bold  align-center ">
-                    <i class="border border-bottom-0 border-success p-2 "><strong>Yasa->gashi</strong></i>
+                    <i class="border border-bottom-0 border-light p-2 text-light "><strong>Yasa->gashi</strong></i>
                 </span>
             </a>
             <!-- toggle-button -->
@@ -35,15 +35,19 @@
                 <ul class="navbar-nav ">
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Log out</a>
+                        <a class="nav-link text-dark nav-items " href="{% url 'logout' %}">Log out</a>
                     </li>
        
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Log in</a>
+                    <li class="nav-item ">
+                        <a class="nav-link  text-dark nav-items " href="{% url 'login' %}">Log in</a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'following' 1%}">Profile</a>
+                    <li class="nav-item ">
+                        <a href="">
+                            <img src="login.svg" class="avatar" alt="">
+                        </a>
+                        
+       
                     </li>
                     
                 </ul>
@@ -52,6 +56,29 @@
 
 
     </nav>
+    <div class="container-xxl p-5 bg-theme">
+        <div class="row justify-content-evenly">
+            <div class="col-4  ">
+
+                <select class="form-select select-filter " >
+                    <option value="" selected disabled hidden>Select Location</option>
+                    <option class="bg-primary">Kumsasi</option>
+                    <option>Tamale</option>
+                    <option>Sekondi-Takoradi</option>
+                    <option>Sunyani </option>
+                    <option>Cape Coast</option>
+                    <option>Obuasi</option>
+                    <option>Teshie</option>
+                    <option>Tema </option>
+                  </select>
+                  <div class="pb-5">
+                  </div>
+                  <div class="pb-4">
+                </div>
+            </div>
+        </div>
+
+    </div>
 
 
     <div class="container-lg border p-5">
@@ -65,6 +92,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
     <script src="{% static 'main/script.js' %}"></script>
+    <script src="script.js"></script>
 
 </body>
 </html>
