@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav class="navbar navv sticky-top navbar-expand-md bg-success border pb-3  ">
+    <nav class="navbar navv sticky-top navbar-expand-md bg-success pb-3  ">
         <div class="container-lg  mt-3 ">
             <!-- navbar brand -->
             <a href="/" class="navbar-brand  " >
@@ -21,7 +21,7 @@
             </a>
             <!-- toggle-button -->
                  <!-- toggle-button -->
-                 <button class="navbar-toggler bg-success" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false"
+                 <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#main-nav" aria-controls="main-nav" aria-expanded="false"
                  aria-label="Toggle navigation">
                  <span class="navbar-toggler-icon"></span>
                  </button>
@@ -31,7 +31,7 @@
 
     
             <!-- nav bar links -->         
-            <div class="collapse navbar-collapse border  justify-content-end" id="main-nav" >
+            <div class="collapse navbar-collapse  justify-content-end" id="main-nav" >
                 <ul class="navbar-nav ">
 
                     <li class="nav-item">
@@ -56,7 +56,7 @@
 
 
     </nav>
-    <div class="container-xxl p-5 bg-theme">
+    <div class="container-fluid p-5 bg-theme">
         <div class="row justify-content-evenly">
             <div class="col-4  ">
 
@@ -81,9 +81,43 @@
     </div>
 
 
-    <div class="container-lg border p-5">
+    <div class="container-xxl border ">
         {% block content %}
         {% endblock content %} 
+
+        <!-- page-layout -->
+        <div class="row ">
+
+            <!-- filter-knob -->
+            <div class="col-4 p-2  d-none d-xl-block border">
+            </div>
+
+            <!-- property listing -->
+            <div class="container col p-5 border">
+                <div class="row">
+                    <div class="col p-2 border"></div>
+                </div>
+            </div>
+            <!-- <div class="col p-5 border">
+    
+                    <div class="row">
+                        <div class="col p-2 border"></div>
+                        <div class="col p-2 border"></div>
+       
+                    </div>
+                    <div class="row">
+                        <div class="col p-2 border"></div>
+                        <div class="col p-2 border"></div>
+       
+                    </div>
+                </div>
+            
+
+            </div> -->
+        </div>
+
+
+
     </div>
     
 
