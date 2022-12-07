@@ -1,0 +1,47 @@
+{% extends 'main/layout.html' %}
+
+{% block filter-bar %}
+<div class="container-fluid p-5 bg-theme">
+    <div class="row justify-content-evenly">
+        <div class="col-4  ">
+            <form action="">
+                <select class="form-select select-filter " >
+                    <option value="" selected disabled hidden>Select Location</option>
+                    <option class="bg-primary">Kumsasi</option>
+                    <option>Tamale</option>
+                    <option>Sekondi-Takoradi</option>
+                    <option>Sunyani </option>
+                    <option>Cape Coast</option>
+                    <option>Obuasi</option>
+                    <option>Teshie</option>
+                    <option>Tema </option>
+                  </select>
+                  <button type="submit" class="btn filter-btn btn-success">Search</button>
+            </form>
+            <div class="pb-5">
+            </div>
+            <div class="pb-4">
+            </div>
+        </div>
+    </div>
+
+</div>{% endblock filter-bar %}
+
+
+
+{% block content %}
+ <!-- page-layout -->
+ <div class="row ">
+
+    <!-- filter-knob -->
+    <div class="col-4 p-2  d-none d-xl-block border">
+    </div>
+
+    <!-- property listing -->
+    <div class="container col p-5 border">
+        <div class="row">
+            <div class="col p-2 border"></div>
+        </div>
+    </div>
+   
+{% endblock content %}

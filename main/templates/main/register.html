@@ -1,44 +1,41 @@
-<!-- {% extends 'main/layout' %} -->
+{% extends 'main/layout.html' %}
+{% block content %}
 
-<head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    
-    <div class="row " >
-        <div class="col p-1 d-none d-lg-block border bg-success register-img-container ">
-            <img class="img-fluid  register-img " src="register.svg" alt="">
-            <!-- <object class="border" data="login.svg" height="600px" width="600" ></object> -->
-        </div>
 
-        <div class="col">
-            <div class=" form-register ">
-                <h2 class="posts">Create An Account</h2>
-                <form action="{% url 'register' %}" method="post" class="form-input" >
-                    <!-- {% csrf_token %} -->
-                    <div class="  form-group">
-                        <input class="  form-control" autofocus type="text" name="username" placeholder="Username">
-                    </div>
-                    <div class="  form-group">
-                        <input class="    form-control" type="email" name="email" placeholder="Email Address">
-                    </div>
-                    <div class="form-group">
-                        <input class=" form-control" type="password" name="password" placeholder="Password">
-                    </div>
-                    <div class="form-group">
-                        <input class="   form-control" type="password" name="confirmation" placeholder="Confirm Password">
-                    </div>
-                    <button class="btn submit-btn btn-success " type="submit">Register</button>
-                  
-                </form>
-            
-                Already have an account? <a href="{% url 'login' %}">Log In here.</a>
-                
-            </div>
-
-        </div>
+<div class="row  " >
+    <div class="col  d-none d-lg-block  bg-theme register-img-container ">
+        {% load static %}
+        <img class="img-fluid  register-img " src="{% static 'main/svg/register.svg'%}" alt="">
+        <!-- <object class="border" data="login.svg" height="600px" width="600" ></object> -->
     </div>
 
+    <div class="col">
+        <div class=" form-register ">
+            <h2 class="posts">Create An Account</h2>
+            <form action="" method="post" class="form-input" >
+                {% csrf_token %} 
+                <div class="  form-group">
+                    <input class="  form-control" autofocus type="text" name="username" placeholder="Username">
+                </div>
+                <div class="  form-group">
+                    <input class="    form-control" type="email" name="email" placeholder="Email Address">
+                </div>
+                <div class="form-group">
+                    <input class=" form-control" type="password" name="password" placeholder="Password">
+                </div>
+                <div class="form-group">
+                    <input class="   form-control" type="password" name="confirmation" placeholder="Confirm Password">
+                </div>
+                <button class="btn submit-btn btn-success " type="submit">Register</button>
+              
+            </form>
+        
+            Already have an account? <a href="{% url 'login' %}">Log In here.</a>
+            
+        </div>
 
-</body>
+    </div>
+</div>
+
+{% endblock content %}
+

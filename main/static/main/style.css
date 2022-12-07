@@ -39,7 +39,7 @@ body{
 
 
 .register-img-container, .login-img-container{
-   height: 100vh;
+   height: 90vh;
 
   
 }
@@ -67,7 +67,7 @@ body{
  
  
 .form-register{
-    /* border: 2px solid;  */
+    /* border: 2px solid rgb(244, 242, 242); */
     margin-top: 30%;
 }
 
