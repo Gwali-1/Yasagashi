@@ -78,6 +78,11 @@ body{
     margin-top: 10px;
 }
 
+.filter-btn{
+    margin-top: 10px;
+    border-radius: 0px;  
+}
+
 
 
 .select-filter{
