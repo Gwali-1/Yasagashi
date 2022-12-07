@@ -16,7 +16,7 @@ import json
 def index(request):
     return HttpResponse("index view")
 
-
+#register create user account on firrbase  -> store in database -> profile settings-> login
 def signup(request):
     return render(request,"main/register.html")
 
