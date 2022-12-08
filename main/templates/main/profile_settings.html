@@ -13,7 +13,6 @@
  </div>
 {% endfor %}    
 
-{{user.profile.profile_image}}
 <div class="row  justify-content-around" >
     <div class="col-5 p-1 d-none d-lg-block border   profile-img-container ">
         <img class="img-fluid  profile-img  mx-5 my-4 " src="{{profile.profile_image}}" alt="">
@@ -27,7 +26,6 @@
             <h2 class="mb-4">Edit profile</h2>
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {{profile.bio}}
                 <div class="input-group mb-3">
                     <span class="input-group-text" id="basic-addon1 form-control">Location</span>
                     <select name="location" class="form-select form-control select-filter " >

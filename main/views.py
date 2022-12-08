@@ -16,9 +16,14 @@ USER_OBJ={}
 
 
 ## Create your views here.
-@login_required
+
 def index(request):
-    return HttpResponse("index view")
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user=request.user)
+        return render(request,"main/index.html",{"profile":profile})
+
+
+    return render(request,"main/index.html")
 
 
 
@@ -59,7 +64,7 @@ def signup(request):
             USER_OBJ["firebase_user"]=user
         except Exception as e:
             messages.error(request,"something happened , try again later")
-            print(e)
+            return HttpResponseRedirect(reverse("signin"))
    
 
         #database
@@ -69,18 +74,16 @@ def signup(request):
             valid_user = authenticate(request,username=username,password=password)
             new_profile = Profile.objects.create(user=valid_user)
             new_profile.save()
-            
             login(request,valid_user)
             messages.success(request,"account created")
             return HttpResponseRedirect(reverse("profile"))
+
         except Exception as e:
             print(e)
             messages.error(request,"could not add user")
             return HttpResponseRedirect(reverse("signup"))
     
         
-
-
     return render(request,"main/register.html")
 
 
@@ -94,37 +97,56 @@ def signup(request):
 
 
 def signin(request):
+
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
 
-
+        print(email,password)
         if not email or not password:
             messages.error(request,"provide valid input")
             return HttpResponseRedirect(reverse("signin"))
 
         try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            messages.error(request,"invalid username or password")
+            return HttpResponseRedirect(reverse("signin"))
+
+        #firebase
+        try:
             user_firebase = firebase_auth.sign_in_with_email_and_password(email,password)
             USER_OBJ["firebase_user"] = user_firebase
-            print(user_firebase)
-        except Exception as e:
-            print(e)
-            return render(request,"main/error.html",{"error":e})
-
-        user = authenticate(request,email=email,password=password)
-        if not user:
             login(request,user)
-            messages.error(request,"Invalid username or password")
             return HttpResponseRedirect(reverse("index"))
+        except Exception as e:
+            messages.error(request,"Invalid username or password")
+            return render(request,"main/login_error.html",{"error":e})
 
-        messages.error(request,"could not log user in")
-        return HttpResponseRedirect(reverse("login"))
-
-
+        
+       
     return render(request,"main/login.html")
 
-def logout(request):
-    return HttpResponse("logged out")
+
+
+
+
+
+
+
+
+
+
+@login_required
+def signout(request):
+    logout(request)
+    return redirect("signin")
+
+
+
+
+
+
 
 
 @login_required
@@ -135,8 +157,12 @@ def profile_settings(request):
     #authenticate user input
 
     if request.method == "POST":
-        print(USER_OBJ)
-        print( request.POST)
+       
+        if not USER_OBJ:
+            logout(request)
+            messages.info(request,"Log in to edit profile")
+            return HttpResponseRedirect(reverse("signin"))
+
         user = firebase_auth.refresh(USER_OBJ["firebase_user"]["refreshToken"])
 
         if not request.FILES.get("image"):

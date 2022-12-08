@@ -2,6 +2,15 @@
 {% extends 'main/layout.html' %}
 {% block content %}
 
+  <!-- flash_messages -->
+  {% for message in messages %}
+  <div class=" alert {{ message.tags }} alert-dismissible  text-center" role="alert">
+  <button type="button" class="btn-close " data-bs-dismiss="alert" aria-label="Close">
+  </button>
+  {{ message | safe }}
+  </div>
+ {% endfor %}    
+
  
 <div class="row " >
     <div class="col p-1 d-none d-lg-block border bg-theme login-img-container ">
