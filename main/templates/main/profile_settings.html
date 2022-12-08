@@ -1,0 +1,73 @@
+{% extends 'main/layout.html' %}
+
+
+
+{% block content %}
+
+ <!-- flash_messages -->
+ {% for message in messages %}
+ <div class=" alert {{ message.tags }} alert-dismissible  text-center" role="alert">
+ <button type="button" class="btn-close " data-bs-dismiss="alert" aria-label="Close">
+ </button>
+ {{ message | safe }}
+ </div>
+{% endfor %}    
+
+{{user.profile.profile_image}}
+<div class="row  justify-content-around" >
+    <div class="col-5 p-1 d-none d-lg-block border   profile-img-container ">
+        <img class="img-fluid  profile-img  mx-5 my-4 " src="{{profile.profile_image}}" alt="">
+        <!-- <object class="border" data="login.svg" height="600px" width="600" ></object> -->
+        <div class=" border mx-2 p-4 bg-theme profile-footer"></div>
+    </div>
+  
+
+    <div class="col ">
+        <div class=" form-profile  ">
+            <h2 class="mb-4">Edit profile</h2>
+            <form action="">
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1 form-control">Location</span>
+                    <select class="form-select form-control select-filter " >
+                        <option value="{{ss}}" selected disabled hidden>{{profile.location}}</option>
+                        <option>Kumsasi</option>
+                        <option>Tamale</option>
+                        <option>Sekondi-Takoradi</option>
+                        <option>Sunyani </option>
+                        <option>Cape Coast</option>
+                        <option>Obuasi</option>
+                        <option>Teshie</option>
+                        <option>Tema </option>
+                      </select>
+                  </div>
+
+                
+
+                  <div class="input-group">
+                    <span class="input-group-text">Bio</span>
+                    <textarea class="form-control" aria-label="With textarea">{{profile.bio}}</textarea>
+                  </div>
+
+
+                  <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="{{profile.email}}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <span class="input-group-text" id="basic-addon2">Email</span>
+                  </div>
+
+                  <div class="mb-3 w-50">
+                    <label for="formFile" class="form-label">Default file input example</label>
+                    <input class="form-control" type="file" id="formFile">
+                  </div>
+                  <div class="p-5 border w-25"></div>
+
+                
+                <button type="submit" class="btn filter-btn btn-success">Save</button>
+                
+
+            </form>
+            
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
