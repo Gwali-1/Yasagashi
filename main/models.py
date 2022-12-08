@@ -12,7 +12,7 @@ class User(AbstractUser):
 class Profile(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="profile")
     bio=models.TextField(blank=True)
-    primary_location=models.CharField(max_length=200,blank=True)
+    primary_location=models.CharField(max_length=200,blank=True, null=True)
     profile_image=models.TextField(default="https://firebasestorage.googleapis.com/v0/b/web-projs-122ec.appspot.com/o/profile%2Fundraw_Male_avatar_re_y880.png?alt=media&token=ad0ac38c-5b35-4bb4-92bc-1b3a377f66e0")
     Agent=models.BooleanField(default=False)
     email_verified=models.BooleanField(default=False)

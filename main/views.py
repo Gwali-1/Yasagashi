@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from . import  firebase_auth, firebase_storage
+import uuid
+import datetime
 
 
 
@@ -42,7 +44,7 @@ def signup(request):
             return render(request,"main/register.html")
         
         if User.objects.filter(email=email).exists():
-            messages.error("Account with this email already exist")
+            messages.error(request,"Account with this email already exist")
             return render(request,"main/register.html")
         
         if password != confirm_password:
@@ -100,7 +102,45 @@ def logout(request):
 
 
 
-@login_required
 def profile_settings(request):
     profile = Profile.objects.get(user=request.user)
+
+
+    #authenticate user input
+
+    if request.method == "POST":
+        print(USER_OBJ)
+        print( request.POST)
+        user = firebase_auth.refresh(USER_OBJ["firebase_user"]["refreshToken"])
+
+        if not request.FILES.get("image"):
+            image = profile.profile_image
+            location = request.POST.get("location")
+            bio = request.POST.get("bio")
+            profile.profile_image = image
+            profile.bio = bio
+            profile.primary_location = location
+            profile.save()
+
+            return HttpResponseRedirect(reverse("profile"))
+
+
+
+        image = request.FILES.get("image")
+        ##firebase storage
+        image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
+        firebase_storage.child(f"profile/{image_name}").put(image)
+        image_url = firebase_storage.child(f"profile/{image_name}").get_url(user['idToken'])
+        
+        #database
+        location = request.POST.get("location")
+        bio = request.POST.get("bio")
+        profile.profile_image = image_url
+        profile.bio = bio
+        profile.primary_location = location
+        profile.save()
+
+        return HttpResponseRedirect(reverse("profile"))
+
+    
     return render(request,"main/profile_settings.html",{"profile":profile})
