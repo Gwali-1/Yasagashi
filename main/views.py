@@ -16,7 +16,7 @@ USER_OBJ={}
 
 
 ## Create your views here.
-
+@login_required
 def index(request):
     return HttpResponse("index view")
 
@@ -94,14 +94,40 @@ def signup(request):
 
 
 def signin(request):
-    print(USER_OBJ)
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+
+        if not email or not password:
+            messages.error(request,"provide valid input")
+            return HttpResponseRedirect(reverse("signin"))
+
+        try:
+            user_firebase = firebase_auth.sign_in_with_email_and_password(email,password)
+            USER_OBJ["firebase_user"] = user_firebase
+            print(user_firebase)
+        except Exception as e:
+            print(e)
+            return render(request,"main/error.html",{"error":e})
+
+        user = authenticate(request,email=email,password=password)
+        if not user:
+            login(request,user)
+            messages.error(request,"Invalid username or password")
+            return HttpResponseRedirect(reverse("index"))
+
+        messages.error(request,"could not log user in")
+        return HttpResponseRedirect(reverse("login"))
+
+
     return render(request,"main/login.html")
 
 def logout(request):
     return HttpResponse("logged out")
 
 
-
+@login_required
 def profile_settings(request):
     profile = Profile.objects.get(user=request.user)
 
