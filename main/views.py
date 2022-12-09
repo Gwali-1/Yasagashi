@@ -12,6 +12,7 @@ import datetime
 
 
 
+
 USER_OBJ={}
 
 
@@ -120,7 +121,6 @@ def signin(request):
             login(request,user)
             return HttpResponseRedirect(reverse("index"))
         except Exception as e:
-            messages.error(request,"Invalid username or password")
             return render(request,"main/login_error.html",{"error":e})
 
         
@@ -157,15 +157,15 @@ def profile_settings(request):
     #authenticate user input
 
     if request.method == "POST":
-       
         if not USER_OBJ:
             logout(request)
             messages.info(request,"Log in to edit profile")
             return HttpResponseRedirect(reverse("signin"))
 
-        user = firebase_auth.refresh(USER_OBJ["firebase_user"]["refreshToken"])
+       
 
         if not request.FILES.get("image"):
+            print("no image")
             image = profile.profile_image
             location = request.POST.get("location")
             bio = request.POST.get("bio")
@@ -179,20 +179,25 @@ def profile_settings(request):
 
 
         image = request.FILES.get("image")
-        ##firebase storage
-        image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
-        firebase_storage.child(f"profile/{image_name}").put(image)
-        image_url = firebase_storage.child(f"profile/{image_name}").get_url(user['idToken'])
+        try:
+            ##firebase storage
+            user = firebase_auth.refresh(USER_OBJ["firebase_user"]["refreshToken"])
+            image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
+            firebase_storage.child(f"profile/{image_name}").put(image)
+            image_url = firebase_storage.child(f"profile/{image_name}").get_url(user['idToken'])
+                
+            #database
+            location = request.POST.get("location")
+            bio = request.POST.get("bio")
+            profile.profile_image = image_url
+            profile.bio = bio
+            profile.primary_location = location
+            profile.save()
+            return HttpResponseRedirect(reverse("profile"))
+
+        except Exception as e:
+            messages.info(request,"Something happened , try again later")
+            return HttpResponseRedirect(reverse("profile"))
         
-        #database
-        location = request.POST.get("location")
-        bio = request.POST.get("bio")
-        profile.profile_image = image_url
-        profile.bio = bio
-        profile.primary_location = location
-        profile.save()
-
-        return HttpResponseRedirect(reverse("profile"))
-
     
     return render(request,"main/profile_settings.html",{"profile":profile})

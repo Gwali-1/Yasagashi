@@ -17,6 +17,7 @@ class Profile(models.Model):
     Agent=models.BooleanField(default=False)
     email_verified=models.BooleanField(default=False)
     credibilty=models.IntegerField(default=0)
+    
 
     def __str__(self):
         return f"{self.user.username} Profile"
@@ -32,6 +33,7 @@ class Listings(models.Model):
     location=models.CharField(max_length=100)
     price=models.FloatField(default=0.00)
     accomodation_type=models.CharField(max_length=100)
+    contact=models.CharField(max_length=15,blank=True,null=True)
 
     def __str__(self):
         return f"Listing by {self.user.username}"
