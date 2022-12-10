@@ -111,7 +111,18 @@ body{
 
 .select-filter{
     border-radius: 5px;
+
 }
+
+.select-filter-form{
+    min-width: 250px;
+    max-width: 450px;
+}
+
+/* .carousel{
+    width: 400px;
+    height: 200px;
+} */
 /* ##################################### */
 
 

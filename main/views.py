@@ -138,18 +138,6 @@ def signin(request):
 
 
 @login_required
-def signout(request):
-    logout(request)
-    return redirect("signin")
-
-
-
-
-
-
-
-
-@login_required
 def profile_settings(request):
     profile = Profile.objects.get(user=request.user)
 
@@ -201,3 +189,16 @@ def profile_settings(request):
         
     
     return render(request,"main/profile_settings.html",{"profile":profile})
+
+
+
+def post(request):
+
+    return render(request,"main/post.html")
+
+
+
+@login_required
+def signout(request):
+    logout(request)
+    return redirect("signin")
