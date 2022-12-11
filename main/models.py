@@ -24,7 +24,7 @@ class Profile(models.Model):
 
 
 
-class Listings(models.Model):
+class Listing(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="listings")
     image=models.TextField(default="")
     date_listed=models.DateTimeField(default=datetime.datetime.now)
@@ -40,7 +40,7 @@ class Listings(models.Model):
 
 
 class Listing_favourites(models.Model):
-    listing=models.ForeignKey(Listings,on_delete=models.CASCADE,related_name=("favourited_by"))
+    listing=models.ForeignKey(Listing,on_delete=models.CASCADE,related_name=("favourited_by"))
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name=("favourites"))
 
     def __str__(self):

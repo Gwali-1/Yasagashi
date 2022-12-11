@@ -11,3 +11,15 @@ def update_profile(Profile_model,bio=None,primary_location=None,profile_image=No
          return True
     except Exception as e:
         return False
+
+
+
+
+
+def authenticate_post_form(form):
+    exempt = ["csrfmiddlewaretoken","contact"]
+    for key,value in form.items():
+        if key not in exempt:
+            if not value: 
+               return False
+    return True

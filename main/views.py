@@ -1,13 +1,15 @@
 from django.shortcuts import render,redirect
 from  django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from .models import User,Listings,Profile
+from .models import User,Listing,Profile
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from . import  firebase_auth, firebase_storage
 import uuid
 import datetime
+from .helpers import authenticate_post_form
+from django.db import transaction,IntegrityError
 
 
 
@@ -111,8 +113,16 @@ def signin(request):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            messages.error(request,"invalid username or password")
+            messages.error(request,"invalid email or password")
             return HttpResponseRedirect(reverse("signin"))
+
+        ##chek password
+
+        check_user = authenticate(request,username=user.username,password=password)
+        if check_user is None:
+            messages.error(request,"invalid email or password")
+            return HttpResponseRedirect(reverse("signin"))
+
 
         #firebase
         try:
@@ -175,12 +185,13 @@ def profile_settings(request):
             image_url = firebase_storage.child(f"profile/{image_name}").get_url(user['idToken'])
                 
             #database
-            location = request.POST.get("location")
-            bio = request.POST.get("bio")
-            profile.profile_image = image_url
-            profile.bio = bio
-            profile.primary_location = location
-            profile.save()
+            with transaction.atomic():
+                location = request.POST.get("location")
+                bio = request.POST.get("bio")
+                profile.profile_image = image_url
+                profile.bio = bio
+                profile.primary_location = location
+                profile.save()
             return HttpResponseRedirect(reverse("profile"))
 
         except Exception as e:
@@ -194,6 +205,63 @@ def profile_settings(request):
 
 def post(request):
 
+    if request.method == "POST":
+        if not USER_OBJ:
+            logout(request)
+            messages.info(request,"Log in to make a post")
+            return HttpResponseRedirect(reverse("signin"))
+
+        print(request.FILES)
+        print(request.FILES.getlist("image"))
+
+
+        accomodation_type = request.POST.get("type")
+        price = request.POST.get("price")
+        location = request.POST.get("location")
+        description = request.POST.get("description")
+        contact = request.POST.get("type")
+        image = request.FILES.get("image")
+
+        if not authenticate_post_form(request.POST):
+            messages.error(request,"Fill in  all required fields")
+            return HttpResponseRedirect(reverse("post"))
+
+        # if len(request.FILES.getlist < 2):
+        #     pass
+
+        #firebase
+        urls = []
+        user = firebase_auth.refresh(USER_OBJ["firebase_user"]["refreshToken"])
+        for image in request.FILES.getlist("image"):
+            try:
+                image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
+                firebase_storage.child(f"accomodation_post/{image_name}").put(image)
+                urls.append(firebase_storage.child(f"profile/{image_name}").get_url(user['idToken']))
+
+            except Exception as e:
+                messages.info(request, "could not add Listing , try again later")
+                return HttpResponseRedirect(reverse("post"))
+
+        #database
+        try:
+            with transaction.atomic():
+                image_url = "|".join(x for x in urls)
+                print(image_url)
+                new_Listing = Listing.objects.create(user=request.user, accomodation_type=accomodation_type,price=price,
+                location=location,description=description.strip(),contact=contact,image=image_url)
+                new_Listing.save()
+                urls.clear()
+        except IntegrityError:
+            messages.info(request, "could not add Listing , try again later")
+            return HttpResponseRedirect(reverse("post"))
+
+
+
+        messages.success(request,"Listing added")
+        return HttpResponseRedirect(reverse("index"))
+
+
+        
     return render(request,"main/post.html")
 
 
