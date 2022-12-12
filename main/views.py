@@ -79,6 +79,7 @@ def signup(request):
             new_profile.save()
             login(request,valid_user)
             messages.success(request,"account created")
+            password,confirm_password = ""
             return HttpResponseRedirect(reverse("profile"))
 
         except Exception as e:
@@ -203,8 +204,11 @@ def profile_settings(request):
 
 
 
+
+
 def post(request):
 
+    profile = Profile.objects.get(user=request.user)
     if request.method == "POST":
         if not USER_OBJ:
             logout(request)
@@ -262,11 +266,23 @@ def post(request):
 
 
         
-    return render(request,"main/post.html")
+    return render(request,"main/post.html",{"profile":profile})
+
+
+
+
+
+@login_required
+def listing(request):
+    profile = Profile.objects.get(user=request.user)
+    return render(request,"main/listing.html",{"profile":profile})
+
 
 
 
 @login_required
 def signout(request):
+
     logout(request)
+    USER_OBJ.clear()
     return redirect("signin")
