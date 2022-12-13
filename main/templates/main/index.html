@@ -79,7 +79,7 @@
             <div class="col-md-4 ">
              
 
-                <div id="carouselExampleControls" class="carousel slide border border-danger text-center"  data-bs-interval="false">
+                <div id="carouselExampleControls" class="carousel slide  text-center"  data-bs-interval="false">
                     <div class="carousel-inner">
                       <div class="carousel-item active">
                         <img src="{{listing.image}}" height="200" width="200" alt="...">
@@ -109,12 +109,16 @@
                    </div>
                    <p class="product-description">{{listing.description}}</p>
                    <p class="product-location text-muted">{{listing.location}}</p>
-                   {% if listing.furnished %}
-                        <p>furnised</p>
-                    {% else %}
-                        <p>unfurnished</p>
-                   {% endif %}
-                  
+
+                   <div class=" ">
+                        {% if listing.furnished %}
+                            <h6><span class="  rounded-pill  badges badge text-bg-secondary">FURSNISHED</span></h6>
+                        {% else %}
+                        <h6><span class=" badge rounded-pill  text-bg-secondary">UNFURNISHED</span></h6>
+                        {% endif %}
+    
+                   </div>
+                 
                 
                 </div>
                 <form action="" method="post">
@@ -127,6 +131,7 @@
         </div>
             
         {% endfor %}
+
 
 
 
