@@ -21,12 +21,17 @@ USER_OBJ={}
 ## Create your views here.
 
 def index(request):
+
     if request.user.is_authenticated:
+        listings = Listing.objects.all().order_by("-date_listed")
+
         profile = Profile.objects.get(user=request.user)
-        return render(request,"main/index.html",{"profile":profile})
+        return render(request,"main/index.html",{"profile":profile,"listings":listings})
+
+    listings = Listing.objects.all()
 
 
-    return render(request,"main/index.html")
+    return render(request,"main/index.html",{"listings":listings})
 
 
 
@@ -79,7 +84,7 @@ def signup(request):
             new_profile.save()
             login(request,valid_user)
             messages.success(request,"account created")
-            password,confirm_password = ""
+            password = confirm_password = ""
             return HttpResponseRedirect(reverse("profile"))
 
         except Exception as e:
@@ -215,9 +220,6 @@ def post(request):
             messages.info(request,"Log in to make a post")
             return HttpResponseRedirect(reverse("signin"))
 
-        print(request.FILES)
-        print(request.FILES.getlist("image"))
-
 
         accomodation_type = request.POST.get("type")
         price = request.POST.get("price")
@@ -240,7 +242,7 @@ def post(request):
             try:
                 image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
                 firebase_storage.child(f"accomodation_post/{image_name}").put(image)
-                urls.append(firebase_storage.child(f"profile/{image_name}").get_url(user['idToken']))
+                urls.append(firebase_storage.child(f"accomodation_post/{image_name}").get_url(user['idToken']))
 
             except Exception as e:
                 messages.info(request, "could not add Listing , try again later")
@@ -250,11 +252,16 @@ def post(request):
         try:
             with transaction.atomic():
                 image_url = "|".join(x for x in urls)
-                print(image_url)
-                new_Listing = Listing.objects.create(user=request.user, accomodation_type=accomodation_type,price=price,
-                location=location,description=description.strip(),contact=contact,image=image_url)
+                print(len(image_url.split("|")))
+                if "furnished" in request.POST:
+                    new_Listing = Listing.objects.create(user=request.user, accomodation_type=accomodation_type,price=price,
+                    location=location,description=description.strip(),contact=contact,image=image_url)
+                else:
+                    new_Listing = Listing.objects.create(user=request.user, accomodation_type=accomodation_type,price=price,
+                    location=location,description=description.strip(),contact=contact,image=image_url,furnished=False)
+
                 new_Listing.save()
-                urls.clear()
+            urls.clear()
         except IntegrityError:
             messages.info(request, "could not add Listing , try again later")
             return HttpResponseRedirect(reverse("post"))

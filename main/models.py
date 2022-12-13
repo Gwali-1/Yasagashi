@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
+from django.utils import timezone
 
 
 # Create your models here.
@@ -27,13 +28,13 @@ class Profile(models.Model):
 class Listing(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="listings")
     image=models.TextField(default="")
-    date_listed=models.DateTimeField(default=datetime.datetime.now)
-    available=models.BooleanField(default=False)
+    date_listed=models.DateTimeField(default=timezone.now)
     description=models.TextField()
     location=models.CharField(max_length=100)
     price=models.FloatField(default=0.00)
     accomodation_type=models.CharField(max_length=100)
     contact=models.CharField(max_length=15,blank=True,null=True)
+    furnished=models.BooleanField(default=True)
 
     def __str__(self):
         return f"Listing by {self.user.username}"

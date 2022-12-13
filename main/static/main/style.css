@@ -119,6 +119,21 @@ body{
     max-width: 450px;
 }
 
+.product-price{
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 27px;
+}
+
+.product-description{
+    margin-top: -13px;
+    font-size: 18px;
+}
+.product-location{
+    margin-top: -5px;
+    font-size: 15px;
+}
+
+
 /* .carousel{
     width: 400px;
     height: 200px;
