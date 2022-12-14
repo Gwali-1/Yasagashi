@@ -134,6 +134,15 @@ body{
 }
 
 
+.listing-display{
+    color: inherit;
+    text-decoration: none;
+
+}
+
+.listing-display:hover{
+   color: rgb(93, 28, 140);
+}
 
 
 /* .carousel{

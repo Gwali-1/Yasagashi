@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 import datetime
 from django.utils import timezone
+import uuid
 
 
 # Create your models here.
@@ -26,8 +27,10 @@ class Profile(models.Model):
 
 
 class Listing(models.Model):
+    id = models.UUIDField(primary_key=True,default=uuid.uuid4)
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name="listings")
     image=models.TextField(default="")
+    display_image=models.TextField(default="")
     date_listed=models.DateTimeField(default=timezone.now)
     description=models.TextField()
     location=models.CharField(max_length=100)
@@ -38,6 +41,23 @@ class Listing(models.Model):
 
     def __str__(self):
         return f"Listing by {self.user.username}"
+
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "image": self.image,
+            "date_listed": self.date_listed,
+            "description": self.description,
+            "locaton": self.location,
+            "price": self.price,
+            "accomodation_type": self.accomodation_type,
+            "furnished": self.furnished,
+            "owner":self.user.username,
+            "owner_email":self.user.email,
+            "contact":self.contact
+
+        }
 
 
 class Listing_favourites(models.Model):

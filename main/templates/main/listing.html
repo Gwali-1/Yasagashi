@@ -2,47 +2,66 @@
 
 
 {% block content %}
+
 <div class="container overflow-hidden">
 
-    <div class="row justify-content-between">
+    <div class="row  mt-4">
 
         <!-- image -->
-        <div class="col-md-7 border text-center">
-            <div>
-                <img  cl width="600" height="500"  src="https://firebasestorage.googleapis.com/v0/b/web-projs-122ec.appspot.com/o/profile%2Fmatt-profile-2022-12-11%2000%3A07%3A07.313790-c00be996-78e7-11ed-bd9d-3e22fb3d9eef?alt=media&amp;token=eyJhbGciOiJSUzI1NiIsImtpZCI6Ijk3OGI1NmM2NmVhYmIwZDlhNmJhOGNhMzMwMTU2NGEyMzhlYWZjODciLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vd2ViLXByb2pzLTEyMmVjIiwiYXVkIjoid2ViLXByb2pzLTEyMmVjIiwiYXV0aF90aW1lIjoxNjcwNzE3MDIzLCJ1c2VyX2lkIjoiTzFVNXJFM0dhTlFzYVV0Q1BDRDBkZnZRbkp2MSIsInN1YiI6Ik8xVTVyRTNHYU5Rc2FVdENQQ0QwZGZ2UW5KdjEiLCJpYXQiOjE2NzA3MTcyMjcsImV4cCI6MTY3MDcyMDgyNywiZW1haWwiOiJtYXR0QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJtYXR0QGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.MkbrW-onvWFEeP4yr-_QeYY6iMk4NdaM69zVa40Mwc1_NTdB0BJ4oPJEQRW38JZ1Chbs6OID3hfuIdi-JWPSKXI-IDNaBehzSpZ-dU2820R3cY-motnAwZnpHQMsUWHjkzGwRwjHLV3lQcMOdFcHEceMYhbDFUPWIjKSNR35hJYgn77XwzvDt0ICv05xJntXipPN2kY11ntESBFv84nxTOpyGkKlRQhk7RrtS1aHq9I-2GxOhdLO0UD-KmzAoKUdZXM6H4bJrQYkP22MHM1uZvC478PhY_VlC4XUC-3bxL07sR3N8teaMAia3XB9x0k5oID9yedhrEmkI4WRHVp--Q"  height="300" width="300" alt= "image">
-            </div>
+
+
+        
+        <div class="col-md-7 ">
+            <div id="carouselExampleControls" class="carousel slide "  data-bs-interval="false">
+                    <div class="carousel-inner ">
+                        {% for image in images %}
+                        {% if forloop.counter == 1 %}
+                                <div class="carousel-item active ">
+                                    <img src="{{image}}" height="500" width="700" alt="image of property">
+                                </div>
+
+                            {% else %}
+
+                                <div class="carousel-item  ">
+                                    <img src="{{image}}" height="500" width="700" alt="image of property">
+                                </div>
+                            {% endif %}
+
+                            
+                        {% endfor %}
+                
+                    </div>
+               
+
+           
+                <button class="carousel-control-prev mt-5 " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-success mt-5 " aria-hidden="true"></span>
+                <span class="visually-hidden text-danger">Previous</span>
+                </button>
+                <button class="carousel-control-next mt-5 " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-success mt-5 " aria-hidden="true"></span>
+                <span class="visually-hidden text-danger">Next</span>
+                </button>
+            </div> 
         </div>
 
-        <div class="col-md-4 border bg-light p-4">
+       
+
+        <div class="col-md-4 border bg-light ">
             <div class="border bg-light listing_item mb-5 ">
-                <p class="listing-title ">{{listing.title}}</p> 
+                <p class="listing-title ">{{listing.price}}</p> 
                 <p class="text-break description fw-light"><i>{{listing.description}}</i></p>
-                <div class="text-success">
-                    <button type="button" class="btn btn-dark  position-relative">
-                        Bids
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info">
-                            {{listing.bid_number}}
-                        </span>
-                     </button>
-                    
-                    <span class="mx-4 listing-price" >Current Price:{{listing.price}}0</span>
-                </div>
+                
 
                  <!-- Details -->
-                <div class="accordian" id="Details">
-                    <div class="accordion-item">
-                        <h2 class="" id="headingOne">
-                          <button class="btn btn-sm  px-4 btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#detail" aria-expanded="true" aria-controls="collapseOne">
-                           Details</i>
-                        </h2>
-                        <div id="detail" class="accordion-collapse collapse  " aria-labelledby="headingOne" data-bs-parent="#Details">
-                          <div class="accordion-body">
-                           <p>Listed by :{{listing.user.first_name}}</p>
-                           <p>Category:{{category.name}}</p>
-                           <p>Posted: {{listing.created}}</p>
-                          </div>
-                   
-                      </div>
+                 <div>
+                    <p class="listing-title ">{{listing.location}}</p> 
+                    <p class="listing-title ">{{listing.date_listed}}</p> 
+                    <p class="listing-title ">{{listing.accomodation_type}}</p> 
+                    <p class="listing-title ">{{listing.contact}}</p> 
+                    <p class="listing-title ">{{listing.furnished}}</p> 
+                 </div>
+                
                 </div>
             </div>  
         </div> 

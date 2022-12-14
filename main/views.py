@@ -10,6 +10,7 @@ import uuid
 import datetime
 from .helpers import authenticate_post_form
 from django.db import transaction,IntegrityError
+from django.core import paginator
 
 
 
@@ -20,18 +21,73 @@ USER_OBJ={}
 
 ## Create your views here.
 
-def index(request):
+
+
+def index(request,page_num):
+
+    return HttpResponseRedirect(reverse("home"),args=(1,))
+
+
+     
+
+
+
+def home(request,page_num):
 
     if request.user.is_authenticated:
         listings = Listing.objects.all().order_by("-date_listed")
-
         profile = Profile.objects.get(user=request.user)
+
+        if request.method == "POST":
+            if "location-filter" in request.POST:
+                location = request.POST.get("location")
+                if not location:
+                    return render(request,"main/index.html")
+                listings = Listing.objects.filter(location=location)
+                return render(request,"main/index.html",{"listings":listings})
+          
+            
+        elif "filter-knob" in request.POST:
+            print("knob fitering")
+        else:
+            print("dont know ")
+
+
+
+        
         return render(request,"main/index.html",{"profile":profile,"listings":listings})
 
-    listings = Listing.objects.all()
 
 
-    return render(request,"main/index.html",{"listings":listings})
+    #from unauthenticated user 
+    listings = Listing.objects.all().order_by("-date_listed")
+
+    if request.method == "POST":
+        if "location-filter" in request.POST:
+            location = request.POST.get("location")
+            if not location:
+                return render(request,"main/index.html",{"listings":listings})
+            
+            listings = Listing.objects.filter(location=location)
+            pages = paginator(listings,10)
+            current_page = pages.get_page(page_num)
+            return render(request,"main/index.html",{"listings":listings})
+          
+        elif "filter-knob" in request.POST:
+            min_price = request.POST.get("minimum-price")
+            max_price = request.POST.get("maximum-price")
+            rent = request.POST.get("rent")
+            sale = request.POST.get("sale")
+            print("knob fitering")
+        else:
+            print("dont know ")
+
+
+
+    pages = paginator(listings,10)
+    current_page = pages.get_page(page_num)
+    return render(request,"main/index.html",{"listings":current_page})
+ 
 
 
 
@@ -225,7 +281,7 @@ def post(request):
         price = request.POST.get("price")
         location = request.POST.get("location")
         description = request.POST.get("description")
-        contact = request.POST.get("type")
+        contact = request.POST.get("contact")
         image = request.FILES.get("image")
 
         if not authenticate_post_form(request.POST):
@@ -245,6 +301,7 @@ def post(request):
                 urls.append(firebase_storage.child(f"accomodation_post/{image_name}").get_url(user['idToken']))
 
             except Exception as e:
+                print(e)
                 messages.info(request, "could not add Listing , try again later")
                 return HttpResponseRedirect(reverse("post"))
 
@@ -255,10 +312,10 @@ def post(request):
                 print(len(image_url.split("|")))
                 if "furnished" in request.POST:
                     new_Listing = Listing.objects.create(user=request.user, accomodation_type=accomodation_type,price=price,
-                    location=location,description=description.strip(),contact=contact,image=image_url)
+                    location=location,description=description.strip(),contact=contact,image=image_url,display_image=urls[0])
                 else:
                     new_Listing = Listing.objects.create(user=request.user, accomodation_type=accomodation_type,price=price,
-                    location=location,description=description.strip(),contact=contact,image=image_url,furnished=False)
+                    location=location,description=description.strip(),contact=contact,image=image_url,display_image=urls[0],furnished=False)
 
                 new_Listing.save()
             urls.clear()
@@ -279,10 +336,26 @@ def post(request):
 
 
 
+
+
+
+def wathlist(request):
+    pass
+
+
+
+
+
 @login_required
-def listing(request):
+def listing(request,id):
+    listing = Listing.objects.filter(id=id)
+    
+    if not listing:
+        pass
+
+    images = listing[0].image.split("|")
     profile = Profile.objects.get(user=request.user)
-    return render(request,"main/listing.html",{"profile":profile})
+    return render(request,"main/listing.html",{"profile":profile,"listing":listing[0],"images":images})
 
 
 
@@ -293,3 +366,8 @@ def signout(request):
     logout(request)
     USER_OBJ.clear()
     return redirect("signin")
+
+
+# dbff2053-b81c-4aff-88e3-ee196c74d8ca
+# b3447343-bcdd-4c08-958b-f294e9a046c9
+# b0ea7ecb-9db0-4c37-a103-e9d0383d4518
