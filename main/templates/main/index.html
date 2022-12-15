@@ -4,7 +4,7 @@
 <div class="container-fluid p-5 bg-theme">
     <div class="row justify-content-evenly">
         <div class="col-4  select-filter-form" >
-            <form action="" class="" method="post">
+            <form action="{% url 'home' 1 %}" class="" method="post">
                 {% csrf_token %}
                 <select name="location" class="form-select select-filter  " >
                     <option value="" selected disabled hidden>select Location</option>
@@ -133,6 +133,29 @@
                 
                 </div>     
            {% endfor %}
+           <div class="">
+            <nav aria-label="..." class= "  d-flex justify-content-center ">
+                <ul class="pagination pagination-lg">
+    
+                    {% if listings.has_previous %}
+                        <li class="page-item"><a class="page-link text-secondary" href="{% url 'home' listings.previous_page_number %}">{{listings.previous_page_number}}</a></li>
+                    {% endif %}
+    
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link bg-success">
+                        {{listings.number}}
+                      
+                        </span>
+                    </li>
+                    
+                    {% if listings.has_next %}
+                         <li class="page-item"><a class="page-link text-secondary" href="{% url 'home' listings.next_page_number %}">{{listings.next_page_number}}</a></li>
+                    {% endif %}
+                    
+                </ul>
+            </nav>
+    
+        </div>
         </div>
 
 

@@ -10,7 +10,7 @@ import uuid
 import datetime
 from .helpers import authenticate_post_form
 from django.db import transaction,IntegrityError
-from django.core import paginator
+from django.core.paginator import Paginator
 
 
 
@@ -23,9 +23,8 @@ USER_OBJ={}
 
 
 
-def index(request,page_num):
-
-    return HttpResponseRedirect(reverse("home"),args=(1,))
+def index(request):
+    return HttpResponseRedirect(reverse("home",args=(1,)))
 
 
      
@@ -34,44 +33,78 @@ def index(request,page_num):
 
 def home(request,page_num):
 
+
     if request.user.is_authenticated:
         listings = Listing.objects.all().order_by("-date_listed")
         profile = Profile.objects.get(user=request.user)
+
+        #pagination
+        pages = Paginator(listings,2)
+        print(pages.num_pages)
+        if page_num > pages.num_pages:
+            print("too large")
+            return HttpResponseRedirect(reverse("index"))
+
+        try:
+            current_page = pages.get_page(page_num)
+        except Exception as e:
+            return HttpResponseRedirect(reverse("index"))
+
 
         if request.method == "POST":
             if "location-filter" in request.POST:
                 location = request.POST.get("location")
                 if not location:
-                    return render(request,"main/index.html")
-                listings = Listing.objects.filter(location=location)
-                return render(request,"main/index.html",{"listings":listings})
+                    return HttpResponseRedirect(reverse("index"))
+
+
+                listings = Listing.objects.filter(location=location).order_by("date_listed")
+                pages = Paginator(listings,10)
+
+
+                try:
+                    current_page = pages.get_page(page_num)
+                except Exception as e:
+                    return HttpResponseRedirect(reverse("index"))
+                    
+                return render(request,"main/index.html",{"listings":current_page,"page_number":pages.num_pages})
           
-            
-        elif "filter-knob" in request.POST:
-            print("knob fitering")
-        else:
-            print("dont know ")
+            # elif "filter-knob" in request.POST:
+            #     print("knob fitering")
+            # else:
+            #     print("dont know ")
 
 
 
         
-        return render(request,"main/index.html",{"profile":profile,"listings":listings})
+        return render(request,"main/index.html",{"profile":profile,"listings":current_page})
 
 
 
     #from unauthenticated user 
     listings = Listing.objects.all().order_by("-date_listed")
+    pages = Paginator(listings,10)
+    
+
+    print(pages.num_pages)
+    if page_num > pages.num_pages:
+        print("too large")
+        return HttpResponseRedirect(reverse("index"))
+    try:
+        current_page = pages.get_page(page_num)
+    except Exception as e:
+        return HttpResponseRedirect(reverse("index"))
+
+
 
     if request.method == "POST":
         if "location-filter" in request.POST:
             location = request.POST.get("location")
             if not location:
-                return render(request,"main/index.html",{"listings":listings})
+                return render(request,"main/index.html",{"listings":current_page})
             
-            listings = Listing.objects.filter(location=location)
-            pages = paginator(listings,10)
-            current_page = pages.get_page(page_num)
-            return render(request,"main/index.html",{"listings":listings})
+         
+            return render(request,"main/index.html",{"listings":current_page})
           
         elif "filter-knob" in request.POST:
             min_price = request.POST.get("minimum-price")
@@ -84,8 +117,7 @@ def home(request,page_num):
 
 
 
-    pages = paginator(listings,10)
-    current_page = pages.get_page(page_num)
+   
     return render(request,"main/index.html",{"listings":current_page})
  
 
