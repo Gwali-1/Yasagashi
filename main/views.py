@@ -1,16 +1,18 @@
 from django.shortcuts import render,redirect
-from  django.http import HttpResponse, HttpResponseRedirect
+from  django.http import HttpResponse, HttpResponseRedirect,JsonResponse
 from django.urls import reverse
-from .models import User,Listing,Profile
+from .models import User,Listing,Profile,Listing_favourites
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
 from . import  firebase_auth, firebase_storage
 import uuid
 import datetime
 from .helpers import authenticate_post_form
 from django.db import transaction,IntegrityError
 from django.core.paginator import Paginator
+import json
 
 
 
@@ -39,7 +41,7 @@ def home(request,page_num):
         profile = Profile.objects.get(user=request.user)
 
         #pagination
-        pages = Paginator(listings,2)
+        pages = Paginator(listings,10)
         print(pages.num_pages)
         if page_num > pages.num_pages:
             print("too large")
@@ -371,8 +373,33 @@ def post(request):
 
 
 
-def wathlist(request):
-    pass
+@csrf_protect
+@login_required
+def stared(request):
+
+    if request.method == "POST":
+        request_data = json.loads(request.body)
+
+        if not request_data["id"]:
+            pass
+        try:
+            with transaction.atomic:
+                listing = Listing.objects.get(id=request_data["id"])
+
+                already_in_favourites = Listing_favourites.objects.filter(listing=listing)
+
+                if already_in_favourites:
+                    pass
+                new_fav = Listing_favourites.objects.create(listing=listing,user=request.useer)
+                new_fav.save()
+                return JsonResponse({})
+        except Exception as e:
+            print(e)
+            return JsonResponse({})
+    return render(request,"main/stared.html")
+
+
+
 
 
 
@@ -381,13 +408,15 @@ def wathlist(request):
 @login_required
 def listing(request,id):
     listing = Listing.objects.filter(id=id)
-    
     if not listing:
-        pass
-
+        return HttpResponseRedirect(reverse("index"))
     images = listing[0].image.split("|")
     profile = Profile.objects.get(user=request.user)
     return render(request,"main/listing.html",{"profile":profile,"listing":listing[0],"images":images})
+
+
+
+
 
 
 
