@@ -17,7 +17,8 @@
                         {% for image in images %}
                         {% if forloop.counter == 1 %}
                                 <div class="carousel-item active ">
-                                    <img src="{{image}}" height="500" width="700" alt="image of property">
+                                    {% load static %}
+                                    <img src="{{image}}" height="500" width="700" alt="image of property" >
                                 </div>
 
                             {% else %}

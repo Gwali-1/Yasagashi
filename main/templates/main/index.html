@@ -4,7 +4,7 @@
 <div class="container-fluid p-5 bg-theme">
     <div class="row justify-content-evenly">
         <div class="col-4  select-filter-form" >
-            <form action="{% url 'home' 1 %}" class="" method="post">
+            <form action="" class="" method="">
                 {% csrf_token %}
                 <select name="location" class="form-select select-filter  " >
                     <option value="" selected disabled hidden>select Location</option>
@@ -14,6 +14,7 @@
                     <option>Sunyani </option>
                     <option>Cape Coast</option>
                     <option>Obuasi</option>
+                    <option >Accra</option>
                     <option>Teshie</option>
                     <option>Tema </option>
                   </select>
@@ -38,32 +39,30 @@
     <div class="col-4 p-2  d-none d-lg-block border">
 
             <div class="p-3  mt-4  bg-light rounded border">
-                <form action="" method="post">
+                <form action="" method=""  class="mb-4 price-form">
                     {%csrf_token%}
                     <div class="fw-bold">
                         Price
                     </div>
-                    <div class="input-group mb-3">
-                        <input name='minimum-price' type="text" class="form-control" placeholder="MIN" aria-label="min-price">
+                    <div class="input-group">
+                        <input name='minimum-price' type="text" class="form-control min-price" placeholder="MIN" aria-label="min-price">
                         <span class="input-group-text">-</span>
-                        <input name="maximum-price" type="text" class="form-control" placeholder="MAX" aria-label="max-price">
+                        <input name="maximum-price" type="text" class="form-control max-price" placeholder="MAX" aria-label="max-price">
                     </div>
-
-
-                    <div class="form-check form-switch">
-                        <input name="rent" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Rent</label>
-                    </div>
-
-
-                    <div class="form-check form-switch">
-                        <input name="sale" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                        <label class="form-check-label" for="flexSwitchCheckDefault">Sale</label>
-                    </div>
-
-                    <button name="filter-knob" type="submit" class="btn filter-btn btn-outline-light">Filter</button>
-                    
+                    <button name="filter-knob" type="submit" class="btn filter-btn btn-outline-secondary price-btn">Filter</button>
                 </form>
+
+
+                <div class="form-check form-switch">
+                    <input name="rent" class="form-check-input rent-radio" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Rent</label>
+                </div>
+
+
+                <div class="form-check form-switch">
+                    <input name="sale" class="form-check-input sale-radio" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                    <label class="form-check-label" for="flexSwitchCheckDefault">Sale</label>
+                </div>
             </div>
     </div>
 
