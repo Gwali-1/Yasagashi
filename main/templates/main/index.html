@@ -18,8 +18,6 @@
                     <option>Teshie</option>
                     <option>Tema </option>
                   </select>
-                  <button name="location-filter" type="submit" class="btn filter-btn btn-success">Search</button>
-            </form>
             <div class="pb-2">
             </div>
         </div>
@@ -32,6 +30,7 @@
 
 
 {% block content %}
+<input type="hidden" class="page_id" value="1">
  <!-- page-layout -->
 <div class="row ">
 
@@ -39,18 +38,23 @@
     <div class="col-4 p-2  d-none d-lg-block border">
 
             <div class="p-3  mt-4  bg-light rounded border">
-                <form action="" method=""  class="mb-4 price-form">
-                    {%csrf_token%}
+
+                <form action="" class=""></form>
+
+                <form class=" price-form mb-4" >
                     <div class="fw-bold">
                         Price
                     </div>
+
                     <div class="input-group">
                         <input name='minimum-price' type="text" class="form-control min-price" placeholder="MIN" aria-label="min-price">
                         <span class="input-group-text">-</span>
                         <input name="maximum-price" type="text" class="form-control max-price" placeholder="MAX" aria-label="max-price">
                     </div>
-                    <button name="filter-knob" type="submit" class="btn filter-btn btn-outline-secondary price-btn">Filter</button>
+                    <button name="filter-knob" type="submit" class="btn filter-btn btn-outline-secondary rounded price-btn">Filter</button>
+
                 </form>
+               
 
 
                 <div class="form-check form-switch">
@@ -69,7 +73,7 @@
 
 
         <!-- property listing -->
-    <div class="container col p-5 ">
+    <div class="container ads-container col p-5 ">
 
             {% for listing in listings %}
                 <a  class="listing-display  " href="{% url 'listing' listing.id %}">
@@ -102,13 +106,13 @@
                                         <h6><span class=" badge rounded-pill  text-bg-secondary">UNFURNISHED</span></h6>
                                         {% endif %}
 
-                                        <h6><span class=" badge rounded-pill mx-1  text-bg-secondary">{{listing.accomodation_type}}</span></h6>
+                                        <h6><span class=" badge rounded-pill mx-1  text-bg-success">{{listing.accomodation_type}}</span></h6>
                     
                                 </div>
                                 
                                 </div>
                                 {% if user.is_authenticated %}
-                                    <form action="" method="post">
+                                    <form action="" method="">
                                         {%csrf_token%}
                                         <input hidden value="" name=listing>
                                         <button type="submit" class=" fs-6 btn btn-outline-primary"><i class="bi bi-star"></i></button>

@@ -49,7 +49,7 @@ class Listing(models.Model):
             "image": self.image,
             "date_listed": self.date_listed,
             "description": self.description,
-            "locaton": self.location,
+            "location": self.location,
             "price": self.price,
             "accomodation_type": self.accomodation_type,
             "furnished": self.furnished,
