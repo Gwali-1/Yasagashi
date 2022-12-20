@@ -112,10 +112,9 @@
                                 
                                 </div>
                                 {% if user.is_authenticated %}
-                                    <form action="" method="">
-                                        {%csrf_token%}
-                                        <input hidden value="" name=listing>
-                                        <button type="submit" class=" fs-6 btn btn-outline-primary"><i class="bi bi-star"></i></button>
+                                    <form class="star-form" action="" method="">
+
+                                        <button type="submit" data-id ="{{listing.id}}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star"></i></button>
                                     </form>
                                 {% endif %}
                             </div>  
@@ -136,6 +135,9 @@
                 
                 </div>     
            {% endfor %}
+
+
+       
            <div class="">
             <nav aria-label="..." class= "  d-flex justify-content-center ">
                 <ul class="pagination pagination-lg">

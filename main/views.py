@@ -386,23 +386,38 @@ def stared(request):
 
     if request.method == "POST":
         request_data = json.loads(request.body)
+        print(request_data)
 
-        if not request_data["id"]:
-            pass
+        if not request_data.get("id"):
+            return JsonResponse({
+                "status":"error",
+                "message":"invalid or missing inout"
+            })
         try:
-            with transaction.atomic:
-                listing = Listing.objects.get(id=request_data["id"])
+            with transaction.atomic():
+                listing = Listing.objects.get(id=request_data.get("id"))
 
                 already_in_favourites = Listing_favourites.objects.filter(listing=listing)
 
                 if already_in_favourites:
-                    pass
-                new_fav = Listing_favourites.objects.create(listing=listing,user=request.useer)
+                    Listing_favourites.objects.get(listing=listing).delete()
+                    return JsonResponse({
+                        "status":"ok",
+                        "message":"removed  stared"
+                    })
+
+                new_fav = Listing_favourites.objects.create(listing=listing,user=request.user)
                 new_fav.save()
-                return JsonResponse({})
+                return JsonResponse({
+                    "status":"ok",
+                    "message":"listing stared"
+                })
         except Exception as e:
             print(e)
-            return JsonResponse({})
+            return JsonResponse({
+                "status":"error",
+                "message":"could not star listing"
+            })
     return render(request,"main/stared.html")
 
 

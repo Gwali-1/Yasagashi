@@ -12,20 +12,61 @@ const saleRadioBtn = document.querySelector(".sale-radio");
 const rentRadioBtn = document.querySelector(".rent-radio");
 const token = document.querySelector("meta[name='token']").getAttribute("content");
 const container  = document.querySelector(".ads-container");
+const postListingForm = document.querySelector(".post-form");
+const postListingFormSpinner = document.querySelector(".post-spinner");
+const imagePick = document.querySelector(".image-picker");
+const imagePreview = document.querySelector(".image-preview");
 
 //
 const profileCirc = document.querySelector(".profile-circle");
+const starBtns = document.querySelectorAll(".star-button");
+
+
+console.log(starBtns);
 
 
 
 
 
+const starPost = function(ele){
+    console.log(ele.innerHTML)
+    
+    fetch("/stared",{
+        method:"POST",
+        headers:{"X-CSRFToken":token},
+        body:JSON.stringify({
+            id:ele.dataset.id,
+        })
+    }).then(response => response.json()).then(result => {
+        console.log(result)
+        if(result.status === "ok"){
+            if (ele.innerHTML == '<i class="bi bi-star"></i>'){
+                console.log("here");
+                ele.innerHTML = "<i class='bi bi-star-fill'></i>"
+                
+            }else{
+                console.log("here rather");
+                ele.innerHTML = "<i class='bi bi-star'></i>"
+            }
+        }
+    }).catch(error => {
+        console.log(error)
+    })
+}
 
+
+
+
+starBtns.forEach(val => {
+    val.addEventListener("click", function(e){
+        e.preventDefault(e);
+        starPost(this);
+    })
+})
 
 
 
 const noneFound = `<div class="container p-4 ">
-
 <div class="alert alert-primary d-flex align-items-cente bg-theme" role="alert">
     <i class="bi text-danger bi-exclamation-triangle-fill"></i>
     <div class="p-5">
@@ -40,11 +81,9 @@ const noneFound = `<div class="container p-4 ">
 
 
 const updateContent  = function(Ads){
-    let htmlContent = ""
+    let htmlContent = "";
     Ads.listings.forEach((val) => {
-        console.log(val);
-        console.log("profile-circ" ,profileCirc)
-        htmlContent+= `  <a  class="listing-display  " href="/listing/${val.id} %}">
+        htmlContent+= `  <a  class="listing-display  " href="/listing/${val.id}">
         <div class="row border mb-3 ">
         
                 <div class="col-md-4 ">
@@ -89,12 +128,10 @@ const updateContent  = function(Ads){
         </div>
 
     </a>`
-
-
-    console.log(htmlContent);
-    container.innerHTML = htmlContent;
         
     });
+
+    container.innerHTML = htmlContent;    
 
 }
 
@@ -151,16 +188,20 @@ if(pageId === 1){
         }).then(response => response.json()).then( result => {
     
             ///////////TODO
-            container.innerHTML = "";
+            container.innerHTML = `<div class="text-center text-success">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>`;
             
             console.log(result);
             if(result.listings.length  === 0){
                 container.innerHTML = noneFound;
             return;
-
             }
 
             updateContent(result);
+
         })
         .catch(error => console.log(error))
     
@@ -183,7 +224,12 @@ if(pageId === 1){
         }).then(response => response.json()).then(result =>{
     
             //////////////TODO
-            container.innerHTML = "";
+            console.log(result);
+            container.innerHTML = `<div class="text-center text-success">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>`;
             
             console.log(result);
             if(result.listings.length  === 0){
@@ -214,7 +260,11 @@ if(pageId === 1){
             }).then(response => response.json()).then(result => {
     
                 ///TODO
-                container.innerHTML = "";
+                container.innerHTML = `<div class="text-center text-success">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>`;
             
             console.log(result);
             if(result.listings.length  === 0){
@@ -252,7 +302,11 @@ if(pageId === 1){
             }).then(response => response.json()).then(result => {
     
                 ////TODO
-                container.innerHTML = "";
+                container.innerHTML = `<div class="text-center text-success">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>`;
             
                 console.log(result);
                 if(result.listings.length  === 0){
@@ -272,4 +326,47 @@ if(pageId === 1){
         
     }
 
- }
+
+
+
+
+
+
+}
+
+if (pageId == 2){
+
+    const styleImage = function(image){
+        image.style.marginRight ="20px";
+        image.style.width = "100px";
+
+    }
+
+    postListingForm.onsubmit = function(){
+        postListingFormSpinner.innerHTML = `   <div class="text-center text-success">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>`;
+
+
+
+    }
+
+    imagePick.onchange = function(){
+        imagePreview.style.display = "block"
+        imagePreview.innerHTML = "";
+        const files = [...this.files]
+        let htmlContent = "";
+        files.forEach( val => {
+            const img = new Image();
+            img.src = URL.createObjectURL(val);
+            styleImage(img);
+            
+            imagePreview.append(img);
+        })
+
+      
+    }
+
+}

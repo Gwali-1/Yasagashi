@@ -144,6 +144,23 @@ body{
    color: rgb(93, 28, 140);
 }
 
+/* .container-preview{
+    
+} */
+
+.image-preview {
+    overflow: auto;
+    white-space: nowrap;
+    display: none;
+  }
+  
+  /* div.scrollmenu a {
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px;
+    text-decoration: none;
+  } */
 
 /* .carousel{
     width: 400px;
