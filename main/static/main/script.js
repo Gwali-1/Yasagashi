@@ -348,25 +348,20 @@ if (pageId == 2){
           <span class="visually-hidden">Loading...</span>
         </div>
     </div>`;
-
-
-
     }
 
+
+    
     imagePick.onchange = function(){
         imagePreview.style.display = "block"
         imagePreview.innerHTML = "";
         const files = [...this.files]
-        let htmlContent = "";
         files.forEach( val => {
             const img = new Image();
             img.src = URL.createObjectURL(val);
             styleImage(img);
             
             imagePreview.append(img);
-        })
-
-      
+        })   
     }
-
 }
