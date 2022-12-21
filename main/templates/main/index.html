@@ -93,29 +93,43 @@
                     
                             <div class="col-md-4  col-">
                                 <div class="lead title">
-                                <div class="product-price">
-                                    <p><span class="currency">GHC</span>{{listing.price}}</p>
-                                </div>
-                                <p class="product-description">{{listing.description}}</p>
-                                <p class="product-location text-muted">{{listing.location}}</p>
-    
-                                <div class="d-inline-flex">
-                                        {% if listing.furnished %}
-                                            <h6><span class="  rounded-pill   badge text-bg-secondary">FURSNISHED</span></h6>
-                                        {% else %}
-                                        <h6><span class=" badge rounded-pill  text-bg-secondary">UNFURNISHED</span></h6>
-                                        {% endif %}
+                                    <div class="product-price">
+                                        <p><span class="currency">GHC</span>{{listing.price}}</p>
+                                    </div>
+                                    <p class="product-description">{{listing.description}}</p>
+                                    <p class="product-location text-muted">{{listing.location}}</p>
+        
+                                    <div class="d-inline-flex">
+                                            {% if listing.furnished %}
+                                                <h6><span class="  rounded-pill   badge text-bg-secondary">FURSNISHED</span></h6>
+                                            {% else %}
+                                            <h6><span class=" badge rounded-pill  text-bg-secondary">UNFURNISHED</span></h6>
+                                            {% endif %}
 
-                                        <h6><span class=" badge rounded-pill mx-1  text-bg-success">{{listing.accomodation_type}}</span></h6>
-                    
-                                </div>
+                                            <h6><span class=" badge rounded-pill mx-1  text-bg-success">{{listing.accomodation_type}}</span></h6>
+                        
+                                    </div>
                                 
                                 </div>
+
                                 {% if user.is_authenticated %}
+                                    {% if listing in favs %}
+
                                     <form class="star-form" action="" method="">
 
-                                        <button type="submit" data-id ="{{listing.id}}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star"></i></button>
+                                        <button type="submit" data-id ="{{listing.id}}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star-fill"></i></button>
                                     </form>
+
+                                    {% else %}
+
+                                        <form class="star-form" action="" method="">
+
+                                            <button type="submit" data-id ="{{listing.id}}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star"></i></button>
+                                        </form>
+                                        
+                                    {% endif %}
+
+                                  
                                 {% endif %}
                             </div>  
                         

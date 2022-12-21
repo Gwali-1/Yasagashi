@@ -326,13 +326,16 @@ if(pageId === 1){
         
     }
 
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
+
 
 if (pageId == 2){
 
@@ -351,7 +354,7 @@ if (pageId == 2){
     }
 
 
-    
+
     imagePick.onchange = function(){
         imagePreview.style.display = "block"
         imagePreview.innerHTML = "";
@@ -360,7 +363,6 @@ if (pageId == 2){
             const img = new Image();
             img.src = URL.createObjectURL(val);
             styleImage(img);
-            
             imagePreview.append(img);
         })   
     }

@@ -4,34 +4,45 @@
 {% block content %}
 <div class="container">
     <input type="hidden" class="page_id" value="5">
-    sss
 
-    {% for watchlisting in watchlist %}
-        <div class="row border align-items-center p-2">
+    {% for listing in stared %}
+    
+        <div class="row border align-items-center justify-content-center mt-4 ">
            
                 <div class="col-md-4 border p-3">
-                    <a href="{% url 'ListingInfo' watchlisting.Listing.id %}" class="listing_item d-block watchlist-link border "> 
+                    <a href="{% url 'listing' listing.listing.id %}" class="listing_item d-block watchlist-link border "> 
                         <div class="border text-center">
-                            <img src="{{watchlisting.Listing.ListingImageUrl}}"  height="200" width="200" alt= "image">
+                            <img src="{{listing.listing.image}}"  height="200" width="300" alt= "image">
                         </div>
                     
                     </a>
                 </div>
            
-            <div class="col-md-4 ">
+            <div class="col-md-4 border ">
                 <div class="lead title">
-                    {{watchlisting.Listing.title}}
-                    {% if watchlisting.Listing.active == True %}
-                            <span class="mx-4 text-success lead"> Open</span> 
-                        {% else %}
-                            <span class="mx-4 text-danger lead">Closed</span> 
-                        {% endif %}
-                    <p class="price text-success">34.0</p>
-                
+
+                    <div class="lead title">
+                        <div class="product-price">
+                            <p><span class="currency">GHC</span>{{listing.listing.price}}</p>
+                        </div>
+                        <p class="product-description">{{listing.listing.description}}</p>
+                        <p class="product-location text-muted">{{listing.listing.location}}</p>
+
+                        <div class="d-inline-flex">
+                                {% if listing.listing.furnished %}
+                                    <h6><span class="  rounded-pill   badge text-bg-secondary">FURSNISHED</span></h6>
+                                {% else %}
+                                <h6><span class=" badge rounded-pill  text-bg-secondary">UNFURNISHED</span></h6>
+                                {% endif %}
+
+                                <h6><span class=" badge rounded-pill mx-1  text-bg-success">{{listing.listing.accomodation_type}}</span></h6>
+            
+                        </div>
+                    </div>
                 </div>
-                <form action="" method="post">
+                <form action="{% url 'unstar' %}" method="post">
                     {%csrf_token%}
-                    <input hidden value="{{watchlisting.Listing.id}}" name=listing>
+                    <input hidden  value="{{listing.listing.id}}" name=id>
                     <button type="submit" class="btn btn-outline-danger">Remove</button>
                 </form>
                 

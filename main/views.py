@@ -39,7 +39,8 @@ def home(request,page_num):
     if request.user.is_authenticated:
         listings = Listing.objects.all().order_by("-date_listed")
         profile = Profile.objects.get(user=request.user)
-
+        fav_post = [x.listing for x in Listing_favourites.objects.filter(user=request.user)]
+        print(fav_post)
         #pagination
         pages = Paginator(listings,10)
         if page_num > pages.num_pages:
@@ -55,7 +56,7 @@ def home(request,page_num):
             request_data = json.loads(request.body)
             return handle_post(request_data)
 
-        return render(request,"main/index.html",{"profile":profile,"listings":current_page})
+        return render(request,"main/index.html",{"profile":profile,"listings":current_page,"favs":fav_post})
 
 
 
@@ -384,6 +385,8 @@ def post(request):
 @login_required
 def stared(request):
 
+    stared = Listing_favourites.objects.filter(user=request.user).order_by("listing").reverse()
+
     if request.method == "POST":
         request_data = json.loads(request.body)
         print(request_data)
@@ -418,9 +421,27 @@ def stared(request):
                 "status":"error",
                 "message":"could not star listing"
             })
-    return render(request,"main/stared.html")
 
 
+    return render(request,"main/stared.html",{"stared":stared})
+
+
+
+@login_required
+def unstar(request):
+    if request.method == "POST":
+        try:
+            listing =  Listing.objects.filter(id=request.POST.get("id"))
+            if listing:
+                exist = Listing_favourites.objects.filter(user=request.user,listing=listing[0])
+                if exist:
+                    Listing_favourites.objects.get(user=request.user,listing=listing[0]).delete()
+                    messages.success(request,"removed from favourites")
+                    return HttpResponseRedirect(reverse("stared"))
+
+        except Exception as e:
+            messages.error(request, "could not remove from favourites")
+            return HttpResponseRedirect(reverse("stared"))
 
 
 
