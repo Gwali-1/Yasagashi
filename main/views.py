@@ -386,7 +386,7 @@ def post(request):
 def stared(request):
 
     stared = Listing_favourites.objects.filter(user=request.user).order_by("listing").reverse()
-
+    profile = Profile.objects.get(user=request.user)
     if request.method == "POST":
         request_data = json.loads(request.body)
         print(request_data)
@@ -423,7 +423,7 @@ def stared(request):
             })
 
 
-    return render(request,"main/stared.html",{"stared":stared})
+    return render(request,"main/stared.html",{"stared":stared,"profile":profile})
 
 
 

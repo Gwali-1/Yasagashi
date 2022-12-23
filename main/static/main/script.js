@@ -18,7 +18,7 @@ const imagePick = document.querySelector(".image-picker");
 const imagePreview = document.querySelector(".image-preview");
 const profileImagePreview = document.querySelector(".profile-image-preview");
 const profileImagePick = document.querySelector(".profile-picker")
-const usr = Number(document.querySelector(".userid").value)
+
 
 
 //
@@ -220,7 +220,6 @@ if(pageId === 1){
         }).then(response => response.json()).then( result => {
     
             ///////////TODO
-            console.log(result)
             renderResults(result)
 
         })
@@ -269,8 +268,7 @@ if(pageId === 1){
             }).then(response => response.json()).then(result => {
     
                 ///TODO
-                console.log(result)
-                renderResults(result)
+                    renderResults(result)
 
             }).catch(error => console.log(error))
     
@@ -301,8 +299,7 @@ if(pageId === 1){
             }).then(response => response.json()).then(result => {
     
                 ////TODO
-                console.log(result)
-                renderResults(result)
+                    renderResults(result)
             }).catch(error => console.log(error))
     
         }else{
