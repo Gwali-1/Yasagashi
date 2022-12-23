@@ -67,6 +67,8 @@ class Listing_favourites(models.Model):
     def __str__(self):
         return f"Listing favourited by {self.user.username}"
 
+  
+
 
 #when you give cred
 class Agents_favourite(models.Model):

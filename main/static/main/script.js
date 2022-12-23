@@ -18,6 +18,8 @@ const imagePick = document.querySelector(".image-picker");
 const imagePreview = document.querySelector(".image-preview");
 const profileImagePreview = document.querySelector(".profile-image-preview");
 const profileImagePick = document.querySelector(".profile-picker")
+const usr = Number(document.querySelector(".userid").value)
+
 
 //
 const profileCirc = document.querySelector(".profile-circle");
@@ -124,8 +126,12 @@ const updateContent  = function(Ads){
                     ${ profileCirc ?  `<form action="" method="">
                     <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
                     <input hidden value="" name=listing>
-                    <button type="submit" class=" fs-6 btn btn-outline-primary"><i class="bi bi-star"></i></button>
-                     </form>
+
+                     ${Ads.favs.includes(val.id) ? `<button type="submit" class=" fs-6 btn btn-outline-primary"><i class="bi bi-star-fill"></i></button>
+                     </form>` : ` <button type="submit" class=" fs-6 btn btn-outline-primary"><i class="bi bi-star"></i></button>
+                     </form>`}
+                   
+
                     `: ''}
                       
                 </div>  
@@ -161,7 +167,7 @@ const updateContent  = function(Ads){
 
  
 if(pageId === 1){
-
+    const usr = Number(document.querySelector(".userid").value)
 
     const renderResults = function(result){
         container.innerHTML = `<div class="text-center text-success">
@@ -170,7 +176,6 @@ if(pageId === 1){
         </div>
       </div>`;
         
-        console.log(result);
         if(result.listings.length  === 0){
             container.innerHTML = noneFound;
         return;
@@ -208,12 +213,14 @@ if(pageId === 1){
             headers:{"X-CSRFToken":token},
             body:JSON.stringify({
                 action:"price_filter",
+                user:usr,
                 min_price:min,
                 max_price:max
             })
         }).then(response => response.json()).then( result => {
     
             ///////////TODO
+            console.log(result)
             renderResults(result)
 
         })
@@ -233,6 +240,7 @@ if(pageId === 1){
             headers:{"X-CSRFToken":token},
             body:JSON.stringify({
                 action:"location_filter",
+                user:usr,
                 location:this.value
             })
         }).then(response => response.json()).then(result =>{
@@ -256,10 +264,12 @@ if(pageId === 1){
                 headers:{"X-CSRFToken":token},
                 body:JSON.stringify({
                     action:"sale_filter",
+                    user:usr
                 })
             }).then(response => response.json()).then(result => {
     
                 ///TODO
+                console.log(result)
                 renderResults(result)
 
             }).catch(error => console.log(error))
@@ -286,10 +296,12 @@ if(pageId === 1){
                 headers:{"X-CSRFToken":token},
                 body:JSON.stringify({
                     action:"rent_filter",
+                    user:usr
                 })
             }).then(response => response.json()).then(result => {
     
                 ////TODO
+                console.log(result)
                 renderResults(result)
             }).catch(error => console.log(error))
     

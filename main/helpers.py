@@ -1,6 +1,6 @@
 import json
 from django.http import JsonResponse
-from .models import Listing
+from .models import Listing,Listing_favourites
 
 
 
@@ -34,6 +34,7 @@ def handle_post(request_data):
         #location
         if request_data["action"] == "location_filter":
             location = request_data.get("location")
+            print(request_data)
             if not location:
                 return JsonResponse({
                     "status":"error",
@@ -41,9 +42,11 @@ def handle_post(request_data):
                     })
                                 
             listings = Listing.objects.filter(location=location).order_by("date_listed")
+            favs = Listing_favourites.objects.filter(user=request_data.get("user"))
             return JsonResponse({
                 "status":"ok",
-                "listings":[listing.serialize() for listing in listings]
+                "listings":[listing.serialize() for listing in listings],
+                "favs":[fav.listing.id for fav in favs]
                 })
                             
         #price
@@ -56,29 +59,37 @@ def handle_post(request_data):
                 return JsonResponse({
                     "status":"error",
                     "message":"Invalid/no input"
-                     })
+                    })
                                 
             listings = Listing.objects.filter(price__range=(min_price,max_price))
-
+            favs = Listing_favourites.objects.filter(user=request_data.get("user"))
             return JsonResponse({
                 "status":"ok",
-                "listings":[listing.serialize() for listing in listings]
-                 })
+                "listings":[listing.serialize() for listing in listings],
+                "favs":[fav.listing.id for fav in favs]
+
+                })
 
         #sale 
         elif request_data["action"] == "sale_filter":
             listings = Listing.objects.filter(accomodation_type="Sale")
+            favs = Listing_favourites.objects.filter(user=request_data.get("user"))
+
             return JsonResponse({
                 "status":"ok",
-                "listings":[listing.serialize() for listing in listings]
+                "listings":[listing.serialize() for listing in listings],
+                "favs":[fav.listing.id for fav in favs]
                 })
 
         #rent
         elif request_data["action"] == "rent_filter":
             listings = Listing.objects.filter(accomodation_type="Rent")
+            favs = Listing_favourites.objects.filter(user=request_data.get("user"))
             return JsonResponse({
                 "status":"ok",
-                "listings":[listing.serialize() for listing in listings]
+                "listings":[listing.serialize() for listing in listings],
+                "favs":[fav.listing.id for fav in favs]
+
                 })      
                           
 

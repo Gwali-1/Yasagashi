@@ -31,6 +31,7 @@
 
 {% block content %}
 <input type="hidden" class="page_id" value="1">
+<input type="hidden" class="userid" value="{{user.id}}">
  <!-- page-layout -->
 <div class="row ">
 
@@ -123,7 +124,6 @@
                                     {% else %}
 
                                         <form class="star-form" action="" method="">
-                                            <input type="hidden" class="userid" value="{{user.id}}">
                                             <button type="submit" data-id ="{{listing.id}}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star"></i></button>
                                         </form>
                                         
