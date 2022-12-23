@@ -16,6 +16,8 @@ const postListingForm = document.querySelector(".post-form");
 const postListingFormSpinner = document.querySelector(".post-spinner");
 const imagePick = document.querySelector(".image-picker");
 const imagePreview = document.querySelector(".image-preview");
+const profileImagePreview = document.querySelector(".profile-image-preview");
+const profileImagePick = document.querySelector(".profile-picker")
 
 //
 const profileCirc = document.querySelector(".profile-circle");
@@ -63,6 +65,9 @@ starBtns.forEach(val => {
         starPost(this);
     })
 })
+
+
+
 
 
 
@@ -157,6 +162,27 @@ const updateContent  = function(Ads){
  
 if(pageId === 1){
 
+
+    const renderResults = function(result){
+        container.innerHTML = `<div class="text-center text-success">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>`;
+        
+        console.log(result);
+        if(result.listings.length  === 0){
+            container.innerHTML = noneFound;
+        return;
+        }
+
+        updateContent(result);
+
+    }
+
+
+
+
     priceForm.onsubmit = function (e){
         e.preventDefault();
         const form = new FormData(priceForm);
@@ -188,19 +214,7 @@ if(pageId === 1){
         }).then(response => response.json()).then( result => {
     
             ///////////TODO
-            container.innerHTML = `<div class="text-center text-success">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>`;
-            
-            console.log(result);
-            if(result.listings.length  === 0){
-                container.innerHTML = noneFound;
-            return;
-            }
-
-            updateContent(result);
+            renderResults(result)
 
         })
         .catch(error => console.log(error))
@@ -224,21 +238,7 @@ if(pageId === 1){
         }).then(response => response.json()).then(result =>{
     
             //////////////TODO
-            console.log(result);
-            container.innerHTML = `<div class="text-center text-success">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>`;
-            
-            console.log(result);
-            if(result.listings.length  === 0){
-                container.innerHTML = noneFound;
-            return;
-
-            }
-
-            updateContent(result);
+            renderResults(result)
         }).catch(error => console.log(error))
     }
     
@@ -260,20 +260,8 @@ if(pageId === 1){
             }).then(response => response.json()).then(result => {
     
                 ///TODO
-                container.innerHTML = `<div class="text-center text-success">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>`;
-            
-            console.log(result);
-            if(result.listings.length  === 0){
-                container.innerHTML = noneFound;
-            return;
+                renderResults(result)
 
-            }
-
-            updateContent(result);
             }).catch(error => console.log(error))
     
         }else{
@@ -302,20 +290,7 @@ if(pageId === 1){
             }).then(response => response.json()).then(result => {
     
                 ////TODO
-                container.innerHTML = `<div class="text-center text-success">
-            <div class="spinner-border" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>`;
-            
-                console.log(result);
-                if(result.listings.length  === 0){
-                    container.innerHTML = noneFound;
-                return;
-    
-                }
-    
-                updateContent(result);
+                renderResults(result)
             }).catch(error => console.log(error))
     
         }else{
@@ -336,14 +311,14 @@ if(pageId === 1){
 
 
 
+const styleImage = function(image){
+    image.style.marginRight ="20px";
+    image.style.width = "100px";
+
+}
 
 if (pageId == 2){
 
-    const styleImage = function(image){
-        image.style.marginRight ="20px";
-        image.style.width = "100px";
-
-    }
 
     postListingForm.onsubmit = function(){
         postListingFormSpinner.innerHTML = `   <div class="text-center text-success">
@@ -366,4 +341,18 @@ if (pageId == 2){
             imagePreview.append(img);
         })   
     }
+}
+
+
+if(pageId == 4){
+    profileImagePick.onchange = function(){
+        profileImagePreview.style.display ="block";
+        profileImagePreview.innerHTML = "";
+        const img = new Image();
+        img.src = URL.createObjectURL(this.files[0])
+        styleImage(img)
+        profileImagePreview.append(img)
+        
+    }
+
 }

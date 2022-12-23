@@ -151,6 +151,10 @@ body{
 .image-preview {
     overflow: auto;
     white-space: nowrap;
+ 
+  }
+
+  .profile-image-preview{
     display: none;
   }
   
