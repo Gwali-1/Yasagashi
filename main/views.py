@@ -254,6 +254,9 @@ def profile_settings(request):
             image = profile.profile_image
             location = request.POST.get("location")
             bio = request.POST.get("bio")
+            contact = request.POST.get("contact")
+
+            profile.contact =contact
             profile.profile_image = image
             profile.bio = bio
             profile.primary_location = location
@@ -275,8 +278,10 @@ def profile_settings(request):
             with transaction.atomic():
                 location = request.POST.get("location")
                 bio = request.POST.get("bio")
+                contact = request.POST.get("contact")
                 profile.profile_image = image_url
                 profile.bio = bio
+                profile.contact = contact
                 profile.primary_location = location
                 profile.save()
             return HttpResponseRedirect(reverse("profile"))

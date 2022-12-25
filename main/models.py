@@ -19,7 +19,7 @@ class Profile(models.Model):
     Agent=models.BooleanField(default=False)
     email_verified=models.BooleanField(default=False)
     credibilty=models.IntegerField(default=0)
-    
+    contact = models.CharField(max_length=12, default="")
 
     def __str__(self):
         return f"{self.user.username} Profile"

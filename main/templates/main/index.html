@@ -30,187 +30,187 @@
 
 
 {% block content %}
-<input type="hidden" class="page_id" value="1">
-<input type="hidden" class="userid" value="{{user.id}}">
- <!-- page-layout -->
-<div class="row ">
+    <input type="hidden" class="page_id" value="1">
+    <input type="hidden" class="userid" value="{{user.id}}">
+    <!-- page-layout -->
+    <div class="row ">
 
-    <!-- filter-knob -->
-    <div class="col-4 p-2  d-none d-lg-block border">
+        <!-- filter-knob -->
+        <div class="col-4 p-2  d-none d-lg-block ">
 
-            <div class="p-3  mt-4  bg-light rounded border">
+                <div class="p-3  mt-4  bg-light rounded border">
 
-                <form action="" class=""></form>
+                    <form action="" class=""></form>
 
-                <form class=" price-form mb-4" >
-                    <div class="fw-bold">
-                        Price
+                    <form class=" price-form mb-4" >
+                        <div class="fw-bold">
+                            Price
+                        </div>
+
+                        <div class="input-group">
+                            <input name='minimum-price' type="text" class="form-control min-price" placeholder="MIN" aria-label="min-price">
+                            <span class="input-group-text">-</span>
+                            <input name="maximum-price" type="text" class="form-control max-price" placeholder="MAX" aria-label="max-price">
+                        </div>
+                        <button name="filter-knob" type="submit" class="btn filter-btn btn-outline-secondary rounded price-btn">Filter</button>
+
+                    </form>
+                
+
+
+                    <div class="form-check form-switch">
+                        <input name="rent" class="form-check-input rent-radio" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Rent</label>
                     </div>
 
-                    <div class="input-group">
-                        <input name='minimum-price' type="text" class="form-control min-price" placeholder="MIN" aria-label="min-price">
-                        <span class="input-group-text">-</span>
-                        <input name="maximum-price" type="text" class="form-control max-price" placeholder="MAX" aria-label="max-price">
+
+                    <div class="form-check form-switch">
+                        <input name="sale" class="form-check-input sale-radio" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                        <label class="form-check-label" for="flexSwitchCheckDefault">Sale</label>
                     </div>
-                    <button name="filter-knob" type="submit" class="btn filter-btn btn-outline-secondary rounded price-btn">Filter</button>
-
-                </form>
-               
-
-
-                <div class="form-check form-switch">
-                    <input name="rent" class="form-check-input rent-radio" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                    <label class="form-check-label" for="flexSwitchCheckDefault">Rent</label>
                 </div>
-
-
-                <div class="form-check form-switch">
-                    <input name="sale" class="form-check-input sale-radio" type="checkbox" role="switch" id="flexSwitchCheckDefault">
-                    <label class="form-check-label" for="flexSwitchCheckDefault">Sale</label>
-                </div>
-            </div>
-    </div>
+        </div>
 
 
 
-        <!-- property listing -->
-    <div class="container ads-container col p-5 ">
+            <!-- property listing -->
+        <div class="container ads-container col p-5 ">
 
-            {% for listing in listings %}
-                <a  class="listing-display  " href="{% url 'listing' listing.id %}">
-                    <div class="row border mb-3 ">
-                    
-                            <div class="col-md-4 ">
-                                <div id="carouselExampleControls" class="carousel slide  text-center"  data-bs-interval="false">
-                                    <div class="carousel-inner">
-                                        <div class="carousel-item active">
-                                            <img src="{{listing.display_image}}" height="200" width="200" alt="image of property">
-                                        </div>
-                                   
-                                    </div>
-                                  
-                                </div> 
-                            </div>
-                    
-                            <div class="col-md-4  col-">
-                                <div class="lead title">
-                                    <div class="product-price">
-                                        <p><span class="currency">GHC</span>{{listing.price}}</p>
-                                    </div>
-                                    <p class="product-description">{{listing.description}}</p>
-                                    <p class="product-location text-muted">{{listing.location}}</p>
-        
-                                    <div class="d-inline-flex">
-                                            {% if listing.furnished %}
-                                                <h6><span class="  rounded-pill   badge text-bg-secondary">FURSNISHED</span></h6>
-                                            {% else %}
-                                            <h6><span class=" badge rounded-pill  text-bg-secondary">UNFURNISHED</span></h6>
-                                            {% endif %}
-
-                                            <h6><span class=" badge rounded-pill mx-1  text-bg-success">{{listing.accomodation_type}}</span></h6>
+                {% for listing in listings %}
+                    <a  class="listing-display  " href="{% url 'listing' listing.id %}">
+                        <div class="row border mb-3 ">
                         
-                                    </div>
-                                
+                                <div class="col-md-4 ">
+                                    <div id="carouselExampleControls" class="carousel slide  text-center"  data-bs-interval="false">
+                                        <div class="carousel-inner">
+                                            <div class="carousel-item active">
+                                                <img src="{{listing.display_image}}" height="200" width="200" alt="image of property">
+                                            </div>
+                                    
+                                        </div>
+                                    
+                                    </div> 
                                 </div>
+                        
+                                <div class="col-md-4  col-">
+                                    <div class="lead title">
+                                        <div class="product-price">
+                                            <p><span class="currency">GHC</span>{{listing.price}}</p>
+                                        </div>
+                                        <p class="product-description">{{listing.description}}</p>
+                                        <p class="product-location text-muted">{{listing.location}}</p>
+            
+                                        <div class="d-inline-flex">
+                                                {% if listing.furnished %}
+                                                    <h6><span class="  rounded-pill   badge text-bg-secondary">FURSNISHED</span></h6>
+                                                {% else %}
+                                                <h6><span class=" badge rounded-pill  text-bg-secondary">UNFURNISHED</span></h6>
+                                                {% endif %}
 
-                                {% if user.is_authenticated %}
-                                    {% if listing in favs %}
+                                                <h6><span class=" badge rounded-pill mx-1  text-bg-success">{{listing.accomodation_type}}</span></h6>
+                            
+                                        </div>
+                                    
+                                    </div>
 
-                                    <form class="star-form" action="" method="">
-
-                                        <button type="submit" data-id ="{{listing.id}}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star-fill"></i></button>
-                                    </form>
-
-                                    {% else %}
+                                    {% if user.is_authenticated %}
+                                        {% if listing in favs %}
 
                                         <form class="star-form" action="" method="">
-                                            <button type="submit" data-id ="{{listing.id}}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star"></i></button>
+
+                                            <button type="submit" data-id ="{{listing.id}}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star-fill"></i></button>
                                         </form>
-                                        
+
+                                        {% else %}
+
+                                            <form class="star-form" action="" method="">
+                                                <button type="submit" data-id ="{{listing.id}}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star"></i></button>
+                                            </form>
+                                            
+                                        {% endif %}
+
+                                    
                                     {% endif %}
-
-                                  
-                                {% endif %}
-                            </div>  
-                        
-                    </div>
-
-                </a>
-               
-                {% empty%}
-
-                <div class="container p-4 ">
-
-                    <div class="alert alert-primary d-flex align-items-cente bg-theme" role="alert">
-                        <div class="p-5">
-                            No ADDS HERE
-                        
+                                </div>  
+                            
                         </div>
+
+                    </a>
                 
-                </div>     
-           {% endfor %}
+                    {% empty%}
+
+                    <div class="container p-4 ">
+
+                        <div class="alert alert-primary d-flex align-items-cente bg-theme" role="alert">
+                            <div class="p-5">
+                                No ADDS HERE
+                            
+                            </div>
+                    
+                    </div>     
+            {% endfor %}
 
 
-       
-           <div class="">
-            <nav aria-label="..." class= "  d-flex justify-content-center ">
-                <ul class="pagination pagination-lg">
-    
-                    {% if listings.has_previous %}
-                        <li class="page-item"><a class="page-link text-secondary" href="{% url 'home' listings.previous_page_number %}">{{listings.previous_page_number}}</a></li>
-                    {% endif %}
-    
-                    <li class="page-item active" aria-current="page">
-                        <span class="page-link bg-success">
-                        {{listings.number}}
-                      
-                        </span>
-                    </li>
-                    
-                    {% if listings.has_next %}
-                         <li class="page-item"><a class="page-link text-secondary" href="{% url 'home' listings.next_page_number %}">{{listings.next_page_number}}</a></li>
-                    {% endif %}
-                    
-                </ul>
-            </nav>
-    
+        
+            <div class="">
+                <nav aria-label="..." class= "  d-flex justify-content-center ">
+                    <ul class="pagination pagination-lg">
+        
+                        {% if listings.has_previous %}
+                            <li class="page-item"><a class="page-link text-secondary" href="{% url 'home' listings.previous_page_number %}">{{listings.previous_page_number}}</a></li>
+                        {% endif %}
+        
+                        <li class="page-item active" aria-current="page">
+                            <span class="page-link bg-success">
+                            {{listings.number}}
+                        
+                            </span>
+                        </li>
+                        
+                        {% if listings.has_next %}
+                            <li class="page-item"><a class="page-link text-secondary" href="{% url 'home' listings.next_page_number %}">{{listings.next_page_number}}</a></li>
+                        {% endif %}
+                        
+                    </ul>
+                </nav>
+        
+            </div>
+            </div>
+
+
+
+
+        </div>
+        
+        
+    </div>
+
+
+
+
+
+
+    {% comment %} <div id="carouselExampleControls" class="carousel slide border border-danger"  data-bs-interval="false">
+        <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="{{profile.profile_image}}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="{{profile.profile_image}}" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item">
+            <img src="{{profile.profile_image}}" class="d-block w-100" alt="...">
         </div>
         </div>
-
-
-
-
-    </div>
-    
-    
-</div>
-
-
-
-
-
-
-{% comment %} <div id="carouselExampleControls" class="carousel slide border border-danger"  data-bs-interval="false">
-    <div class="carousel-inner">
-      <div class="carousel-item active">
-        <img src="{{profile.profile_image}}" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="{{profile.profile_image}}" class="d-block w-100" alt="...">
-      </div>
-      <div class="carousel-item">
-        <img src="{{profile.profile_image}}" class="d-block w-100" alt="...">
-      </div>
-    </div>
-    <button class="carousel-control-prev mt-5 " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-      <span class="carousel-control-prev-icon bg-success mt-5 " aria-hidden="true"></span>
-      <span class="visually-hidden text-danger">Previous</span>
-    </button>
-    <button class="carousel-control-next mt-5 " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-      <span class="carousel-control-next-icon bg-success mt-5 " aria-hidden="true"></span>
-      <span class="visually-hidden text-danger">Next</span>
-    </button>
-</div>  {% endcomment %}
+        <button class="carousel-control-prev mt-5 " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon bg-success mt-5 " aria-hidden="true"></span>
+        <span class="visually-hidden text-danger">Previous</span>
+        </button>
+        <button class="carousel-control-next mt-5 " type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+        <span class="carousel-control-next-icon bg-success mt-5 " aria-hidden="true"></span>
+        <span class="visually-hidden text-danger">Next</span>
+        </button>
+    </div>  {% endcomment %}
 
    
 {% endblock content %}

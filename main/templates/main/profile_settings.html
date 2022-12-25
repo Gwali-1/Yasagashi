@@ -42,12 +42,24 @@
                     <textarea class="form-control" name="bio" aria-label="With textarea">{{profile.bio}}</textarea>
                   </div>
 
+                  <div class="input-group">
+                    <span class="input-group-text">username</span>
+                    <input name="" type="text" class="form-control" placeholder="{{profile.user.username}}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                  </div>
+
+
+                  <div class="input-group">
+                    <span class="input-group-text">contact-info</span>
+                    <input name="contact" type="text" class="form-control" placeholder="{{profile.contact}}" aria-label="Recipient's contact" aria-describedby="basic-addon2">
+                  </div>
+
 
                   <div class="input-group mb-3">
-                    <input name="email" type="text" class="form-control" placeholder="{{profile.user.email}}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                    <input name="email" type="text" class="form-control" placeholder="{{profile.user.email}}" aria-label="Recipient's email" aria-describedby="basic-addon2">
                     <span class="input-group-text" id="basic-addon2">Email</span>
                   </div>
 
+                 
                   <div class="mb-3 w-50">
                     <label for="formFile" class="form-label">Default file input example</label>
                     <input name="image" class="form-control profile-picker" type="file" id="formFile">

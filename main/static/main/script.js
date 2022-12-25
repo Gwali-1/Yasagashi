@@ -32,6 +32,9 @@ console.log(starBtns);
 
 
 
+
+
+//functions
 const starPost = function(ele){
     console.log(ele.innerHTML)
     
@@ -58,6 +61,13 @@ const starPost = function(ele){
     })
 }
 
+
+
+const styleImage = function(image){
+    image.style.marginRight ="20px";
+    image.style.width = "100px";
+
+}
 
 
 
@@ -165,17 +175,17 @@ const updateContent  = function(Ads){
 
 
 
+
+
+
+
+//driver
  
 if(pageId === 1){
     const usr = Number(document.querySelector(".userid").value)
 
     const renderResults = function(result){
-        container.innerHTML = `<div class="text-center text-success">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>`;
-        
+       
         if(result.listings.length  === 0){
             container.innerHTML = noneFound;
         return;
@@ -183,6 +193,15 @@ if(pageId === 1){
 
         updateContent(result);
 
+    }
+
+    const showSpinner = function(){
+        container.innerHTML = `<div class="text-center mt-5 fs-2 text-success">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>`;
+        
     }
 
 
@@ -207,6 +226,9 @@ if(pageId === 1){
             console.log("no");
             return;
         }
+
+        showSpinner();
+        
     
         fetch("/home/page/1",{
             method:"POST",
@@ -234,6 +256,9 @@ if(pageId === 1){
     
     
     locationSelect.onchange = function(e){
+
+       showSpinner();
+        
         fetch("/home/page/1",{
             method:"POST",
             headers:{"X-CSRFToken":token},
@@ -257,6 +282,9 @@ if(pageId === 1){
     saleRadioBtn.onchange = function(e){
         if(this.checked = true){
             if(rentRadioBtn.checked = true) rentRadioBtn.checked = false;
+
+            showSpinner();
+            
     
             fetch("/home/page/1",{
                 method:"POST",
@@ -288,6 +316,8 @@ if(pageId === 1){
     rentRadioBtn.onchange = function(e){
         if(this.checked = true){
             if(saleRadioBtn.checked = true) saleRadioBtn.checked = false;
+
+            showSpinner();
     
             fetch("/home/page/1",{
                 method:"POST",
@@ -320,15 +350,24 @@ if(pageId === 1){
 
 
 
-const styleImage = function(image){
-    image.style.marginRight ="20px";
-    image.style.width = "100px";
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 if (pageId == 2){
-
-
     postListingForm.onsubmit = function(){
         postListingFormSpinner.innerHTML = `   <div class="text-center text-success">
         <div class="spinner-border" role="status">
@@ -351,6 +390,17 @@ if (pageId == 2){
         })   
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 if(pageId == 4){
