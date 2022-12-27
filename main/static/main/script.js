@@ -17,16 +17,16 @@ const postListingFormSpinner = document.querySelector(".post-spinner");
 const imagePick = document.querySelector(".image-picker");
 const imagePreview = document.querySelector(".image-preview");
 const profileImagePreview = document.querySelector(".profile-image-preview");
-const profileImagePick = document.querySelector(".profile-picker")
+const profileImagePick = document.querySelector(".profile-picker");
+const profileSave = document.querySelector(".profile-save")
+const profileUpdateSpinner = document.querySelector(".profile-spinner");
+
+
 
 
 
 //
 const profileCirc = document.querySelector(".profile-circle");
-const starBtns = document.querySelectorAll(".star-button");
-
-
-console.log(starBtns);
 
 
 
@@ -34,7 +34,28 @@ console.log(starBtns);
 
 
 
-//functions
+
+
+
+
+
+
+//functions\\
+
+function starInit(){
+    const starBtns = document.querySelectorAll(".star-button");
+    starBtns.forEach(val => {
+        val.addEventListener("click", function(e){
+            e.preventDefault(e);
+            starPost(this);
+        })
+    })
+    
+    
+}
+
+
+
 const starPost = function(ele){
     console.log(ele.innerHTML)
     
@@ -70,13 +91,6 @@ const styleImage = function(image){
 }
 
 
-
-starBtns.forEach(val => {
-    val.addEventListener("click", function(e){
-        e.preventDefault(e);
-        starPost(this);
-    })
-})
 
 
 
@@ -133,15 +147,12 @@ const updateContent  = function(Ads){
                     
                     </div>
 
-                    ${ profileCirc ?  `<form action="" method="">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
-                    <input hidden value="" name=listing>
-
-                     ${Ads.favs.includes(val.id) ? `<button type="submit" class=" fs-6 btn btn-outline-primary"><i class="bi bi-star-fill"></i></button>
-                     </form>` : ` <button type="submit" class=" fs-6 btn btn-outline-primary"><i class="bi bi-star"></i></button>
+                    ${ profileCirc ?  `<form class='star-form' action="" method="">
+                     <input type="hidden" name="csrfmiddlewaretoken" value="${token}">
+                     ${Ads.favs.includes(val.id) ? `<button type="submit" data-id ="${val.id}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star-fill"></i></button>
+                     </form>` : `<button type="submit" data-id ="${val.id}"  class="  fs-6 btn btn-outline-primary star-button border "><i class="bi bi-star"></i></button>
                      </form>`}
                    
-
                     `: ''}
                       
                 </div>  
@@ -178,10 +189,13 @@ const updateContent  = function(Ads){
 
 
 
-
 //driver
  
 if(pageId === 1){
+
+    starInit();
+
+
     const usr = Number(document.querySelector(".userid").value)
 
     const renderResults = function(result){
@@ -242,7 +256,9 @@ if(pageId === 1){
         }).then(response => response.json()).then( result => {
     
             ///////////TODO
-            renderResults(result)
+            renderResults(result);
+            starInit();
+      
 
         })
         .catch(error => console.log(error))
@@ -270,7 +286,9 @@ if(pageId === 1){
         }).then(response => response.json()).then(result =>{
     
             //////////////TODO
-            renderResults(result)
+            renderResults(result);
+            starInit();
+        
         }).catch(error => console.log(error))
     }
     
@@ -296,7 +314,9 @@ if(pageId === 1){
             }).then(response => response.json()).then(result => {
     
                 ///TODO
-                    renderResults(result)
+                    renderResults(result);
+                    starInit();
+
 
             }).catch(error => console.log(error))
     
@@ -330,6 +350,8 @@ if(pageId === 1){
     
                 ////TODO
                     renderResults(result)
+                    starInit();
+
             }).catch(error => console.log(error))
     
         }else{
@@ -412,6 +434,16 @@ if(pageId == 4){
         styleImage(img)
         profileImagePreview.append(img)
         
+    }
+
+
+    profileSave.onclick = function(){
+
+        profileUpdateSpinner.innerHTML = `   <div class="text-center text-success">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>`;
     }
 
 }

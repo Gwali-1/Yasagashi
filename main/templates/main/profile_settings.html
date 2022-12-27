@@ -50,7 +50,7 @@
 
                   <div class="input-group">
                     <span class="input-group-text">contact-info</span>
-                    <input name="contact" type="text" class="form-control" placeholder="{{profile.contact}}" aria-label="Recipient's contact" aria-describedby="basic-addon2">
+                    <input name="contact" type="text" class="form-control" placeholder="{{profile.contact}}" value="{{profile.contact}}" aria-label="Recipient's contact" aria-describedby="basic-addon2">
                   </div>
 
 
@@ -61,20 +61,27 @@
 
                  
                   <div class="mb-3 w-50">
-                    <label for="formFile" class="form-label">Default file input example</label>
+                    <label for="formFile" class="form-label">Pick a new Profile Pic</label>
                     <input name="image" class="form-control profile-picker" type="file" id="formFile">
                   </div>
                   <div class="    profile-image-preview"></div>
 
                 
-                <button type="submit" class="btn filter-btn btn-success">Save</button>
+                <button type="submit" class="btn filter-btn btn-success profile-save">Save</button>
                 <a href="{% url 'index' %}">home</a>
                 
 
             </form>
             
         </div>
+
+        
+        
     </div>
+
+
+    <div class="mt-5 profile-spinner"> </div>
+     
 </div>
 {% endblock content %}
 
