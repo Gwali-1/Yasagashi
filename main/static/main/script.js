@@ -272,7 +272,6 @@ if(pageId === 1){
     locationSelect.onchange = function(e){
 
        showSpinner();
-        
         fetch("/home/page/1",{
             method:"POST",
             headers:{"X-CSRFToken":token},
@@ -286,6 +285,8 @@ if(pageId === 1){
             //////////////TODO
             renderResults(result);
             starInit();
+            
+            
         
         }).catch(error => console.log(error))
     }

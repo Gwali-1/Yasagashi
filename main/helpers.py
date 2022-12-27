@@ -35,7 +35,6 @@ def handle_post(request_data):
         #location
         if request_data["action"] == "location_filter":
             location = request_data.get("location")
-            print(request_data)
             if not location:
                 return JsonResponse({
                     "status":"error",

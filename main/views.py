@@ -39,19 +39,13 @@ def home(request,page_num):
     all_records = Listing.objects.filter()
     ad_count = get_ad_count(all_records)
 
-    j = {"x":1,"y":2}
-    for x,y  in j.items():
-        print(x,y)
-
     if request.user.is_authenticated:
         listings = Listing.objects.all().order_by("-date_listed")
         profile = Profile.objects.get(user=request.user)
         fav_post = [x.listing for x in Listing_favourites.objects.filter(user=request.user)]
-        print(fav_post)
         #pagination
         pages = Paginator(listings,10)
         if page_num > pages.num_pages:
-            print("too large")
             return HttpResponseRedirect(reverse("index"))
         try:
             current_page = pages.get_page(page_num)
@@ -85,7 +79,6 @@ def home(request,page_num):
 
     if request.method == "POST":
        request_data = json.loads(request.body)
-       print(request_data['action'])
        return handle_post(request_data)
 
 

@@ -12,7 +12,7 @@
                 <select name="location" class="form-select select-filter  " >
                     <option value="" selected disabled hidden>select Location</option>
                     {% for city,count in ad_count %}
-                    <option>{{city}} {{count}}</option>
+                    <option value="{{city}}" >{{city}} {{count}}</option>
                     {% endfor %}        
                   </select>
             <div class="pb-2">
