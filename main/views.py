@@ -9,10 +9,11 @@ from django.views.decorators.csrf import csrf_protect
 from . import  firebase_auth, firebase_storage
 import uuid
 import datetime
-from .helpers import authenticate_post_form,handle_post
+from .helpers import authenticate_post_form,handle_post,get_ad_count
 from django.db import transaction,IntegrityError
 from django.core.paginator import Paginator
 import json
+
 
 
 
@@ -35,6 +36,12 @@ def index(request):
 @csrf_protect
 def home(request,page_num):
 
+    all_records = Listing.objects.filter()
+    ad_count = get_ad_count(all_records)
+
+    j = {"x":1,"y":2}
+    for x,y  in j.items():
+        print(x,y)
 
     if request.user.is_authenticated:
         listings = Listing.objects.all().order_by("-date_listed")
@@ -56,7 +63,7 @@ def home(request,page_num):
             request_data = json.loads(request.body)
             return handle_post(request_data)
 
-        return render(request,"main/index.html",{"profile":profile,"listings":current_page,"favs":fav_post})
+        return render(request,"main/index.html",{"profile":profile,"listings":current_page,"favs":fav_post,"ad_count":ad_count.items()})
 
 
 
@@ -82,7 +89,7 @@ def home(request,page_num):
        return handle_post(request_data)
 
 
-    return render(request,"main/index.html",{"listings":current_page})
+    return render(request,"main/index.html",{"listings":current_page,"ad_count":ad_count.items()})
  
 
 
@@ -453,14 +460,17 @@ def unstar(request):
 
 
 
-@login_required
+
 def listing(request,id):
     listing = Listing.objects.filter(id=id)
     if not listing:
         return HttpResponseRedirect(reverse("index"))
     images = listing[0].image.split("|")
-    profile = Profile.objects.get(user=request.user)
-    return render(request,"main/listing.html",{"profile":profile,"listing":listing[0],"images":images})
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user=request.user)
+        return render(request,"main/listing.html",{"profile":profile,"listing":listing[0],"images":images})
+    return render(request,"main/listing.html",{"listing":listing[0],"images":images})
+
 
 
 

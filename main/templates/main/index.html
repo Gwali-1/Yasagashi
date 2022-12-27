@@ -2,21 +2,18 @@
 
 {% block filter-bar %}
 <div class="container-fluid p-5 bg-theme">
+
+ 
+
     <div class="row justify-content-evenly">
         <div class="col-4  select-filter-form" >
             <form action="" class="" method="">
                 {% csrf_token %}
                 <select name="location" class="form-select select-filter  " >
                     <option value="" selected disabled hidden>select Location</option>
-                    <option class="bg-primary">Kumsasi</option>
-                    <option>Tamale</option>
-                    <option>Sekondi-Takoradi</option>
-                    <option>Sunyani </option>
-                    <option>Cape Coast</option>
-                    <option>Obuasi</option>
-                    <option >Accra</option>
-                    <option>Teshie</option>
-                    <option>Tema </option>
+                    {% for city,count in ad_count %}
+                    <option>{{city}} {{count}}</option>
+                    {% endfor %}        
                   </select>
             <div class="pb-2">
             </div>

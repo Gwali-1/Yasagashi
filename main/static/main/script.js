@@ -194,8 +194,6 @@ const updateContent  = function(Ads){
 if(pageId === 1){
 
     starInit();
-
-
     const usr = Number(document.querySelector(".userid").value)
 
     const renderResults = function(result){

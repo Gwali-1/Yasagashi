@@ -1,6 +1,7 @@
 import json
 from django.http import JsonResponse
 from .models import Listing,Listing_favourites
+from collections import defaultdict
 
 
 
@@ -100,3 +101,13 @@ def handle_post(request_data):
             "message":"could not retrieve error, something happened"
             })
 
+
+
+
+def get_ad_count(records):
+    cities = [x.location for x in records]
+    dict_count = defaultdict(int)
+    for x in cities:
+        dict_count[x] += 1
+
+    return dict_count
