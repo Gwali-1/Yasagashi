@@ -157,6 +157,11 @@ body{
   .profile-image-preview{
     display: none;
   }
+
+
+  .filter-error{
+    display: none;
+  }
   
   /* div.scrollmenu a {
     display: inline-block;

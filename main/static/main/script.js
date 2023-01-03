@@ -18,8 +18,9 @@ const imagePick = document.querySelector(".image-picker");
 const imagePreview = document.querySelector(".image-preview");
 const profileImagePreview = document.querySelector(".profile-image-preview");
 const profileImagePick = document.querySelector(".profile-picker");
-const profileSave = document.querySelector(".profile-save")
+const profileSave = document.querySelector(".profile-save");
 const profileUpdateSpinner = document.querySelector(".profile-spinner");
+const filterErr = document.querySelector(".filter-error");
 
 
 
@@ -57,7 +58,7 @@ function starInit(){
 
 
 const starPost = function(ele){
-    console.log(ele.innerHTML)
+
     
     fetch("/stared",{
         method:"POST",
@@ -66,19 +67,16 @@ const starPost = function(ele){
             id:ele.dataset.id,
         })
     }).then(response => response.json()).then(result => {
-        console.log(result)
         if(result.status === "ok"){
             if (ele.innerHTML == '<i class="bi bi-star"></i>'){
-                console.log("here");
                 ele.innerHTML = "<i class='bi bi-star-fill'></i>"
-                
             }else{
-                console.log("here rather");
                 ele.innerHTML = "<i class='bi bi-star'></i>"
             }
         }
     }).catch(error => {
-        console.log(error)
+        //passs
+        
     })
 }
 
@@ -227,17 +225,17 @@ if(pageId === 1){
     
     
     
-        if (Number.isNaN(min) || Number.isNaN(max)){
-            console.log("enter valid numbers");
-            console.log(`min=${min},max=${max}`);
-            return
+        // if (Number.isNaN(min) || Number.isNaN(max)){
+        //     filterErr.style.display = "block"
+        //     filterErr.innerHTML = "Provide valid input"
+        //     return
+        // }
     
-        }
-    
-        if(max < min){
-            console.log("no");
-            return;
-        }
+        // if(max < min){
+        //     filterErr.style.display = "block"
+        //     filterErr.innerHTML = "Max value must be high than or equal to min "
+        //     return;
+        // }
 
         showSpinner();
         
@@ -254,12 +252,22 @@ if(pageId === 1){
         }).then(response => response.json()).then( result => {
     
             ///////////TODO
+            
+            if (result.status === "error"){
+                filterErr.style.display = "block"
+                filterErr.innerHTML = "problem fetching results, make sure filter parameters are valid" 
+                return
+            }
             renderResults(result);
             starInit();
       
 
         })
-        .catch(error => console.log(error))
+        .catch(error => {
+            filterErr.style.display = "block"
+            filterErr.innerHTML = "could not fetch results at this time" 
+        
+        });
     
         
     }
@@ -317,13 +325,13 @@ if(pageId === 1){
                     starInit();
 
 
-            }).catch(error => console.log(error))
+            }).catch(error => {
+                filterErr.style.display = "block"
+                filterErr.innerHTML = "could not fetch results at this time"
+            })
     
-        }else{
-            console.log("ss")
         }
-    
-    
+ 
         
     }
     
@@ -351,12 +359,12 @@ if(pageId === 1){
                     renderResults(result)
                     starInit();
 
-            }).catch(error => console.log(error))
+            }).catch(error =>{
+                filterErr.style.display = "block"
+                filterErr.innerHTML = "could not fetch results at this time"
+            })
     
-        }else{
-            console.log("ss")
         }
-    
     
         
     }
