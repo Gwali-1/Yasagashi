@@ -186,6 +186,7 @@ def signup(request):
 
 def signin(request):
 
+
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -212,7 +213,8 @@ def signin(request):
         #firebase
         try:
             user_firebase = firebase_auth.sign_in_with_email_and_password(email,password)
-            USER_OBJ["firebase_user"] = user_firebase
+            # USER_OBJ["firebase_user"] = user_firebase
+            request.session["firebase_user"] = user_firebase
             login(request,user)
             return HttpResponseRedirect(reverse("index"))
         except Exception as e:
@@ -239,10 +241,11 @@ def profile_settings(request):
     profile = Profile.objects.get(user=request.user)
 
 
+
     #authenticate user input
 
     if request.method == "POST":
-        if not USER_OBJ:
+        if not request.session["firebase_user"]:
             logout(request)
             messages.info(request,"Log in to edit profile")
             return HttpResponseRedirect(reverse("signin"))
@@ -269,7 +272,7 @@ def profile_settings(request):
         image = request.FILES.get("image")
         try:
             ##firebase storage
-            user = firebase_auth.refresh(USER_OBJ["firebase_user"]["refreshToken"])
+            user = firebase_auth.refresh(request.session["firebase_user"]["refreshToken"])
             image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
             firebase_storage.child(f"profile/{image_name}").put(image)
             image_url = firebase_storage.child(f"profile/{image_name}").get_url(user['idToken'])
@@ -312,7 +315,7 @@ def post(request):
 
     profile = Profile.objects.get(user=request.user)
     if request.method == "POST":
-        if not USER_OBJ:
+        if not request.session["firebase_user"]:
             logout(request)
             messages.info(request,"Log in to make a post")
             return HttpResponseRedirect(reverse("signin"))
@@ -334,7 +337,7 @@ def post(request):
 
         #firebase
         urls = []
-        user = firebase_auth.refresh(USER_OBJ["firebase_user"]["refreshToken"])
+        user = firebase_auth.refresh(request.session["firebase_user"]["firebase_user"]["refreshToken"])
         for image in request.FILES.getlist("image"):
             try:
                 image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
