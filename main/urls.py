@@ -12,6 +12,7 @@ urlpatterns = [
     path("add_listing",views.post,name="post"),
     path("listing/<str:id>",views.listing,name="listing"),
     path("stared",views.stared,name="stared"),
-    path("unstar",views.unstar,name="unstar")
+    path("unstar",views.unstar,name="unstar"),
+    path("profile/<int:id>",views.profile,name="profile")
     
 ]

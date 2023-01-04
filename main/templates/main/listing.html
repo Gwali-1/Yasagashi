@@ -54,18 +54,27 @@
        
 
         <div class="col-md-4 border bg-light ">
-            <div class="border bg-light listing_item mb-5 ">
-                <p class="listing-title ">{{listing.price}}</p> 
-                <p class="text-break description fw-light"><i>{{listing.description}}</i></p>
+            <div class="border bg-light p-2 listing_item mb-5 ">
+                <p class=" listing-price">GH₵ {{listing.price}}</p> 
+                <p class=" product-description ">{{listing.description}}</p>
+                <button class="btn btn-lg btn-primary ">show contact</button>
                 
 
                  <!-- Details -->
-                 <div>
-                    <p class="listing-title ">{{listing.location}}</p> 
-                    <p class="listing-title ">{{listing.date_listed}}</p> 
-                    <p class="listing-title ">{{listing.accomodation_type}}</p> 
-                    <p class="listing-title ">{{listing.contact}}</p> 
-                    <p class="listing-title ">{{listing.furnished}}</p> 
+                 <div class="p-2 border rounded m-1 mt-4">
+                    <p class=" listing-title product-location text-muted "><i class="bi bi-geo-alt text-muted"></i>{{listing.location}}</p> 
+                    <p class="listing-title date text-muted ">{{listing.date_listed}}</p> 
+                    <p class="listing-title "><span class=" badge rounded-pill text-bg-success">{{listing.accomodation_type}}</span></p> 
+                    <input type="hidden" value="{{listing.contact}}">
+                    {% if listing.furnished %}
+                        <h6><span class="  rounded-pill   badge text-bg-secondary">FURSNISHED</span></h6>
+                    {% else %}
+                        <h6><span class=" badge rounded-pill  text-bg-secondary">UNFURNISHED</span></h6>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <p class="listing-title mt-4">Listed by <a href=" {% url 'profile' listing.user.id %}"><span class=" badge rounded-pill  text-bg-info">{{listing.user.username}}</span></a></p>
+                    {% endif %}
+                    {{listing.user.id}}
                  </div>
                 
                 </div>

@@ -304,6 +304,19 @@ def profile_settings(request):
 
 
 
+@login_required
+def profile(request,id):
+    user = User.objects.filter(pk=id)
+    if not user:
+        return HttpResponseRedirect(reverse("index"))
+
+    profile = Profile.objects.filter(user=user[0])
+    if profile:
+        return render(request,"main/profile.html",{"profile":profile[0]})
+
+    return HttpResponseRedirect(reverse("index"))
+
+
 
 
 
@@ -483,7 +496,6 @@ def listing(request,id):
 
 @login_required
 def signout(request):
-
     logout(request)
     USER_OBJ.clear()
     return redirect("signin")

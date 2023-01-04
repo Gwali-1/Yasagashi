@@ -1,0 +1,70 @@
+{% extends 'main/layout.html' %}
+
+
+
+{% block content %}
+<input type="hidden" class="page_id" value="4">
+
+ 
+
+<div class="row  justify-content-around" >
+    <div class="col-5 p-1 d-none d-lg-block border   profile-img-container ">
+        <img class="img-fluid  profile-img  mx-5 my-4 " src="{{profile.profile_image}}" alt="">
+        <!-- <object class="border" data="login.svg" height="600px" width="600" ></object> -->
+        <div class=" border mx-2 p-4 bg-theme profile-footer"></div>
+    </div>
+  
+
+    <div class="col ">
+        <div class=" form-profile  ">
+            <h2 class="mb-4">profile for {{profile.user.username}}</h2>
+            <form action="" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="input-group mb-3">
+                    <span class="input-group-text" id="basic-addon1 form-control">Location</span>
+                      <input name="" type="text" class="form-control" placeholder="{{profile.primary_location}}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                  </div>
+
+                
+
+                  <div class="input-group">
+                    <span class="input-group-text">Bio</span>
+                    <input name="" type="text" class="form-control" placeholder="{{profile.bio}}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+
+                  </div>
+
+                  <div class="input-group">
+                    <span class="input-group-text">username</span>
+                    <input name="" type="text" class="form-control" placeholder="{{profile.user.username}}" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                  </div>
+
+
+                  <div class="input-group">
+                    <span class="input-group-text">contact-info</span>
+                    <input name="contact" type="text" class="form-control" placeholder="{{profile.contact}}" aria-label="Recipient's contact" aria-describedby="basic-addon2">
+                  </div>
+
+
+                  <div class="input-group mb-3">
+                    <input name="email" type="text" class="form-control" placeholder="{{profile.user.email}}" aria-label="Recipient's email" aria-describedby="basic-addon2">
+                    <span class="input-group-text" id="basic-addon2">Email</span>
+                  </div>
+
+                
+                  <div class="    profile-image-preview"></div>
+
+           
+            </form>
+            
+        </div>
+
+        
+        
+    </div>
+
+
+    <div class="mt-5 profile-spinner"> </div>
+     
+</div>
+{% endblock content %}
+

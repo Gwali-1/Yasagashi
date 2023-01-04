@@ -126,7 +126,13 @@ body{
 
 .product-description{
     margin-top: -13px;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: 700;
+}
+.product-descriptionn{
+    margin-top: -13px;
+    font-size: 20px;
+
 }
 .product-location{
     margin-top: -5px;
@@ -161,6 +167,23 @@ body{
 
   .filter-error{
     display: none;
+  }
+
+  .listing-price{
+    font-size: 40px;
+    font-weight: 700;
+    color: #519705;
+  }
+
+
+  .listing-title{
+    font-size: 20px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 300;
+  }
+
+  .date{
+    margin-top: -10px;
   }
   
   /* div.scrollmenu a {
