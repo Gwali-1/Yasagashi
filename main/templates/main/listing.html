@@ -74,7 +74,6 @@
                     {% if user.is_authenticated %}
                         <p class="listing-title mt-4">Listed by <a href=" {% url 'profile' listing.user.id %}"><span class=" badge rounded-pill  text-bg-info">{{listing.user.username}}</span></a></p>
                     {% endif %}
-                    {{listing.user.id}}
                  </div>
                 
                 </div>

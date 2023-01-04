@@ -74,7 +74,6 @@ def home(request,page_num):
     pages = Paginator(listings,10)
     
     if page_num > pages.num_pages:
-        print("too large")
         return HttpResponseRedirect(reverse("index"))
     try:
         current_page = pages.get_page(page_num)
@@ -114,18 +113,16 @@ def home(request,page_num):
 def signup(request):
 
     if request.method == "POST":
-        print("ok")
         username = request.POST.get("username")
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirmation")
 
-        print("====>",username,email,password,confirm_password)
         
        
         #authenticate user input
         if not username or not email or not password or not confirm_password:
-            print("not hit")
+       
             messages.error(request,"provide valid details")
             return render(request,"main/register.html")
         
@@ -134,7 +131,6 @@ def signup(request):
             return render(request,"main/register.html")
         
         if password != confirm_password:
-            print("confirm hit")
             messages.error(request,"passwords do not match")
             return render(request,"main/register.html")
         
@@ -142,7 +138,7 @@ def signup(request):
         #firebase 
         try:
             user = firebase_auth.create_user_with_email_and_password(email,password)
-            USER_OBJ["firebase_user"]=user
+            request.session["firebase_user"] = user
         except Exception as e:
             messages.error(request,"something happened , try again later")
             return HttpResponseRedirect(reverse("signin"))
@@ -194,8 +190,6 @@ def signin(request):
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
-
-        print(email,password)
         if not email or not password:
             messages.error(request,"provide valid input")
             return HttpResponseRedirect(reverse("signin"))
@@ -257,7 +251,6 @@ def profile_settings(request):
        
 
         if not request.FILES.get("image"):
-            print("no image")
             image = profile.profile_image
             location = request.POST.get("location")
             bio = request.POST.get("bio")
@@ -309,7 +302,6 @@ def profile(request,id):
     user = User.objects.filter(pk=id)
     if not user:
         return HttpResponseRedirect(reverse("index"))
-
     profile = Profile.objects.filter(user=user[0])
     if profile:
         return render(request,"main/profile.html",{"profile":profile[0]})
@@ -354,7 +346,7 @@ def post(request):
 
         #firebase
         urls = []
-        user = firebase_auth.refresh(request.session["firebase_user"]["firebase_user"]["refreshToken"])
+        user = firebase_auth.refresh(request.session["firebase_user"]["refreshToken"])
         for image in request.FILES.getlist("image"):
             try:
                 image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
@@ -370,7 +362,6 @@ def post(request):
         try:
             with transaction.atomic():
                 image_url = "|".join(x for x in urls)
-                print(len(image_url.split("|")))
                 if "furnished" in request.POST:
                     new_Listing = Listing.objects.create(user=request.user, accomodation_type=accomodation_type,price=price,
                     location=location,description=description.strip(),contact=contact,image=image_url,display_image=urls[0])
@@ -414,7 +405,6 @@ def stared(request):
     profile = Profile.objects.get(user=request.user)
     if request.method == "POST":
         request_data = json.loads(request.body)
-        print(request_data)
 
         if not request_data.get("id"):
             return JsonResponse({
@@ -497,7 +487,6 @@ def listing(request,id):
 @login_required
 def signout(request):
     logout(request)
-    USER_OBJ.clear()
     return redirect("signin")
 
 
