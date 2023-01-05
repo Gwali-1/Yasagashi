@@ -21,6 +21,7 @@ const profileImagePick = document.querySelector(".profile-picker");
 const profileSave = document.querySelector(".profile-save");
 const profileUpdateSpinner = document.querySelector(".profile-spinner");
 const filterErr = document.querySelector(".filter-error");
+const contactView = document.querySelector(".contact-view");
 
 
 
@@ -130,7 +131,7 @@ const updateContent  = function(Ads){
                 <div class="col-md-4  col-">
                     <div class="lead title">
                     <div class="product-price">
-                        <p><span class="currency">GHC</span>${val.price}</p>
+                        <p><span class="currency text-success">GHC</span>${val.price}</p>
                     </div>
                     <p class="product-description">${val.description}</p>
                     <p class="product-location text-muted">${val.location}</p>
@@ -424,6 +425,14 @@ if (pageId == 2){
 
 
 
+
+if (pageId == 3){
+    const contact = document.querySelector(".contact-val").value
+    contactView.onclick = function (){
+        contactView.innerHTML = contact;
+    }
+
+}
 
 
 

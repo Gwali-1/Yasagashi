@@ -55,9 +55,9 @@
 
         <div class="col-md-4 border bg-light ">
             <div class="border bg-light p-2 listing_item mb-5 ">
-                <p class=" listing-price">GH₵ {{listing.price}}</p> 
+                <p class=" listing-price text-success">GH₵ {{listing.price}}</p> 
                 <p class=" product-description ">{{listing.description}}</p>
-                <button class="btn btn-lg btn-primary ">show contact</button>
+                <button class="btn btn-lg btn-primary  contact-view">show contact</button>
                 
 
                  <!-- Details -->
@@ -65,7 +65,7 @@
                     <p class=" listing-title product-location text-muted "><i class="bi bi-geo-alt text-muted"></i>{{listing.location}}</p> 
                     <p class="listing-title date text-muted ">{{listing.date_listed}}</p> 
                     <p class="listing-title "><span class=" badge rounded-pill text-bg-success">{{listing.accomodation_type}}</span></p> 
-                    <input type="hidden" value="{{listing.contact}}">
+                    <input class="contact-val" type="hidden" value="{{listing.contact}}">
                     {% if listing.furnished %}
                         <h6><span class="  rounded-pill   badge text-bg-secondary">FURSNISHED</span></h6>
                     {% else %}
