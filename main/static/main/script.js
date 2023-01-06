@@ -133,7 +133,7 @@ const updateContent  = function(Ads){
                     <div class="product-price">
                         <p><span class="currency text-success">GHC</span>${val.price}</p>
                     </div>
-                    <p class="product-description">${val.description}</p>
+                    <p class="product-descriptionn">${val.description}</p>
                     <p class="product-location text-muted">${val.location}</p>
 
                     <div class="d-inline-flex">
@@ -430,6 +430,7 @@ if (pageId == 3){
     const contact = document.querySelector(".contact-val").value
     contactView.onclick = function (){
         contactView.innerHTML = contact;
+       
     }
 
 }
