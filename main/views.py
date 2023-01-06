@@ -270,7 +270,7 @@ def profile_settings(request):
         try:
             ##firebase storage
             user = firebase_auth.refresh(request.session["firebase_user"]["refreshToken"])
-            image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
+            image_name = f"-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
             firebase_storage.child(f"profile/{image_name}").put(image)
             image_url = firebase_storage.child(f"profile/{image_name}").get_url(user['idToken'])
                 
