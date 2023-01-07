@@ -264,9 +264,10 @@ def profile_settings(request):
 
             return HttpResponseRedirect(reverse("profile"))
 
-
-
+    
         image = request.FILES.get("image")
+        
+        
         try:
             ##firebase storage
             user = firebase_auth.refresh(request.session["firebase_user"]["refreshToken"])
@@ -287,6 +288,7 @@ def profile_settings(request):
             return HttpResponseRedirect(reverse("profile"))
 
         except Exception as e:
+            print(e)
             messages.info(request,"Something happened , try again later")
             return HttpResponseRedirect(reverse("profile"))
         
