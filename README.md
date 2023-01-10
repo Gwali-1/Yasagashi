@@ -23,70 +23,62 @@ So basically in this file i initialize the pyrebase object and generate the auth
 
 
 ## urls.py
-
-This is where url paths  to various  view functions are defined. we create a list of url patterns  and the view functions that handle them called urlpatterns. The paths defined here like `/login`  or `/profile_settings` are defined here and linked the the view function that handle them in the `views.py`
+This is where url paths  enpoints and various view functions that handle request to them are defined.We create a list of url patterns  and the view functions that handle them in a list obect with name urlpatterns. The paths defined here like `/login`  or `/profile_settings` are linked the the view function that handle them in the `views.py` module.
 
 ## views.py
 
-the views.py contain mainly functionality for handle client request t the server. here we define functions to handle request at specefic routes in the app and return response to the client. There are various view functions that handle request in this file . some are decorated to handle request only  from users who are authenticated. database models from `models.py` file are imported here and are used to perform database transactions such as storing data collected from users or retrieving data to be returned to client.  some some of the view functions in this file  include 
+The views.py contain mainly functionality for handle client request to the server. Here we define functions to handle request at specific routes in the app and return response to the client. There are various view functions for different url endpoints that handle request in this file. Some are decorated to handle request only  from users who are authenticated and some are also csrf protected. Database models from `models.py` file are imported here and are used to perform database transactions such as storing data collected from users or retrieving data to be returned to client in the functions.  some some of the view functions in this file include ... 
 
- `index`
-
-the `index` view function does only one thing and that is redirect user request to the `home` view function. 
+`index`
+The `index` view function does only one thing and that is redirect user request to the `home` view function. 
 
 
 
 `home`
+The home view function handles both GET and POST requests. It is decorated with the `csrf_protect` decorator from the `django.views.decorators.csrf module`. This is because it handles post request from the client and this is to prevent cross site request forgery by ensuring a csrf token is included in the request. The `home` function handles request for both authenticated and unaunthenticated users. GET reques=t from users who are not signed in are handled the same as authenticated users. Difference is that response from unauthencated users exclude certain data like user favorited post and user profile information and this limits features in the front end.
 
-the home view function both get and post requests. it is decorated with the csrf_protect decorator from the django.views.decorators.csrf module. this is because it handdles post request from the client and
-this is to prevent cross site request forgery. The `home` function handles request for both authenticated and unaunthenticated users. get requesr from users wh are not signed in are  handled the same as authenticated users. difference is that response from unauthencated users exclude certain data like user favorited post and user profile information.
-
-post request from users are handled in the same way for both instances. post request sent to this view function is t filter lisitng results .post requst sent include directives on what type of filtering to be done , the user and depending on what info is needed to filter results. post is sennt from the client as a javascript fetch request with  the csrf tojen specified in the header and payload is added to the request body.
-
-the post request is handled by the `handle_post` which is imported from the `helpers.py` file where its defined.it loads the psot request body and based on the action key does the requiring filtering then returns a json object with filter results. filter results are recieved and handles by  a fuction in the `script,js` file and then rendered for user in the view template.
-
-The distinguish of request handling in this view function fot both authenticated and unauthticated users allows the app to be used my users even if they dont have an account or are not signed in while limiting some app features 
+POST request from users are handled in the same way for both instances. POST request sent to this view function is to filter lisitng results .POST request sent include directives on what type of filtering to be done, the user requesting and depending on what info is needed to filter results. POST is sent from the client as an AJAX call using javascript fetch api with the csrf token specified in the header and payload is added to the request body.
+The post request is handled by the `handle_post` function which is imported from the `helpers.py` file where its defined. It loads the POST request body and based on the action key does the requiring filtering then returns a json object with filter results. Filter results are recieved and handled by  a fuction in the `script.js` file in `/static/main`  and then rendered for user in the view template.
+The fact that there is a distinction of request handling in this view function for both authenticated and unauthticated users allows the app to be used my users even if they don't have an account or are not signed in while limiting some app features. 
 
 
 
 `signup`
 
-the signup view function handles request from users who want to register for accounts. get request sent to the register route hit this functions and an html file (register.html) is returned to allow user to submit required info.  registration form is submitted via post request. 
+The signup view function handles request from users who want to register for accounts. GET request sent to the signup route hit this functions and an html file (register.html) is returned to allow user to submit required info via form. Registration form is submitted via post request. 
+user info such as username, email and password is retrieved from the `request.POST` object and authenticated by checking for presence  validity, whether user account with submitted email already exist or if passwords do not match. If any of these fail,  a response with an error message is sent back to be displayed to user.
 
-user info such as username , email and password is retrieved from the `request.POST` object and authenticated by checking for presence  validity , whehter user account with submitted eamil exist or if passwords entered match . if any of these fail , we send a response with an error message to be displayed to user
 
-
-if checks passes, using the firebase `auth` object created in the `__init__` file imported. we create a user account on firebase with user email and password in a try except block in order ro catch any excpeptions that arise and send apporriate errr message bask to user.
-after creating firebase user we store te firebase object returned from the expresson in request session object. This  firebase object contains information about user account and most important a user token that will be used to  perform operations like uplaoding files into storage bucket
-
-after firebase operations with the pyrebase auth object we also perform some database transactions on our server like creating a new entry into our user table and a profile for our user by also creating an entry into the `user_profile`  table using the `user` and `user_profile` model importef from the `models.py` module
-
-if these operations are succesful , user is redirected to the profile view fuction which presents the profile_settings view template to allow user to edit profile settings , if exceptions is caught in the try block user is redirected to the signup page again with rendered error message 
+If checks passes, using the firebase `auth` object created in the `__init__` file and imported here. We create a user account on firebase with user email and password in a try except block in order to catch any excpeptions that arise and send appropriate error message back to user.
+After creating firebase user account we store the firebase object returned from the expresson in the request session object under users username. This firebase object contains information about user account on firebase and most important a user token that will be used to perform operations like uplaoding files into storage bucket.
+After firebase operations with the pyrebase auth object we also perform some database transactions on our server like creating a new entry into our user table and a profile for our user by also creating an entry into the `user_profile`  table using the `user` and `user_profile` model imported from the `models.py` module
+If these operations are succesful , user is redirected to the profile view fuction which presents the `profile_settings.html` view template to allow user to edit profile settings, if exceptions is caught in the try block user is redirected to the signup page again with rendered error message. 
 
 
 
 
 `signin`
 
-the signin view functions  signs users in if auhentication passes. User submit login credecntials via login form  rendered if user hit the login route via get request. user credentials are checked fro presence even before there are authentcated agains database . then before creditials are authenticated using the auth object from pyrebae against firebase we  authentcat credentials against out dtaabse to verify if account exist with such credentials if that passes we do an extra verificaion agains forebase auth system . after firebase authentication of user details we store firebase object returned into the session object to be used later fot other operations . if user credentials passes , request is redirected  to the index view fucntion which in turn sends users to the home view where listings are displayed. and if verification fails user is redirected back to signin template view again wth rendered error
+The signin view functions  signs users in if authentication passes. User submit login credentials via login form rendered if user hit the signin route via GET request. Uset credentials are checked for presence even before there are authentcated against database. Then before credentials are authenticated using the auth object from pyrebase against firebase cloud we authenticate credentials against our databse first to verify if account exist with such credentials and also to avoid making an uncessary network call. If that passes we do an extra verificaion agains firebase auth system. After firebase authentication of user details we store firebase object returned into the session object to be used later fot other operations. 
+
+If user credentials passes, request is redirected to the index view function which in turn sends users to the home view where listings are displayed. And if verification fails user is redirected back to signin form  again wth rendered error.
 
 
 
 
 `profile_settings`
 
-the profile_setings view functions returns a Profile_settings view template if user sends a get request. The template presents a display of current state of the users profile such as , email, primary location contact etc  which can be edited and saved.
+The profile_setings view function returns a `profile_settings.html` view template if user sends a GET request. The template presents a display of current state of the users profile such as, email, primary location, contact info  etc which can be edited and saved.
+when a user edits and saves changes, this triggers a POST request to this view function. Again user submitted data is authenticated and checked for validity before user profile is updated with new information.
 
-when user edits and saves changes , this triggers a post request to this view function. again user submitted data is authenticated and checked for validity before user profile is updated with new information.
-
-there are mainly to scenarios that are checked for in the view function if a post request is submitted . post request body is checked if user submitted a new profile picture , if not . database is updated with other information submiited  but if a profile image is included in user submition then in addition to updating database , we uplaod new image file int0 our  storage bucket. we pass in the  user token in the directive to uplad file . this is because in the firebase storage bucjet rules , we only allow write request from authenticated users. database transaction is performed with `transaction.atomic` context manager which ensures that in any case of a database exception , changes are rolled back and database entry is left unchnaged . only when the block gets executed succesfully thus the return stament is hit is all profile chenges written to database. this helps keeps database atomic and prevent database corruption.  if user profile is updated succesfully . user is redirected back to the prfile settings page, and in situations of an database.This is decorated with the `login_required` decorator hence handles request from only authenticated users
+There are mainly two scenarios that are checked for in the view function if a POST request is submitted. POST request body is checked if user submitted a new profile picture, if not database is updated with other information submitted but if a profile image is included in user submission then in addition to updating database, we uplaod new image file into our firebase storage bucket. we pass in the  user token in the directive to uplad file. This is because in the firebase storage bucket rules , we only allow write request from authenticated user or source. Database transaction is performed with `transaction.atomic` context manager which ensures that in any case of a database exception, changes are rolled back and database entry is left unchanaged. Only when the block gets executed succesfully thus the return stament is hit is all profile changes written to database. This helps keeps database atomic and prevent database corruption. If user profile is updated succesfully , user is redirected back to the prfile settings page.This is decorated with the `login_required` decorator hence handles request from only authenticated users.
 
 
 
 
 `profile`
 
-tje profile view function simply displays  user profile information for a specific user. this view functions handles request for when authenticated users click on the user name displayed as path of listing information.This is decorated with the `login_required` decorator hence handles request from only authenticated users
+Thee profile view function simply displays user profile information for a specific user. This view functions handles request for when authenticated users click on the user name displayed as path of listing information.Profile info for the user is retrieved from database and added to reasponse as context to be used to display user profile information.This is decorated with the `login_required` decorator hence handles request from only authenticated users.
 
 
 
