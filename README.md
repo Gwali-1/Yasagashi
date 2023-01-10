@@ -14,6 +14,8 @@ In contrast to using the firebase admin SDK, i used `pyrebase service` , a pytho
 Moving forward i shall discuss  the contents of various files in the poject and how the help in the overall functionality, like auth, storage, filtering of results in the front end etc.
 
 
+
+
 ## main/\_\_init__.p
 Starting from the \_\_init__.py file inside  the `main` directory. The contents of this file is executed first everytime the server is started. For this reason i  import the pyrebase module , set up and initialize the pyrebase objet with the firebase credentials i genrated when i created a firebase project and app to use for this project. There is code that basically opens a file (config.json) that contains details of my firebase app in the cloud and i read from the file as a json and pass it into the method for initializing the pyrebase object. With the prebase object returned, i can obtain the pyrebase auth object(auth) for authentication and storage object (storage) for pushing files to my storage bucket hosted on firebase and also getting details of uploaded files like urp paths to them.
 So basically in this file i initialize the pyrebase object and generate the auth and storage objects which will be  used in my creation of accounts for users, authentication of credentials and also the storage object for uplaoding and storing the image files submitted by users per pyrebase documentation.
@@ -84,68 +86,82 @@ Thee profile view function simply displays user profile information for a specif
 
 `post`
 
-get request to the post route hits this view function which returns the post template view which has a form to allo users to submit accomadation post details such as images prices etc.
-
-when form is submitted it is handles by this view fucntion. user deatils are checked and authenticated for validity. if this checks out , user submittted images are loaded from the `request.FILES` object and the uplaoded  to the storage ucket on firebase in a forloop incase user submitted multiple files. on every iteration a random sting is gerated using acobination of   'usetr-listing' plus  current date and generated uuid number which is used as  the image name in storage bucket. after uplaod we get url of uplaoded file in the bucket and add append it to a list later to be comverted to a formated list thatcan be split into seperate urls and sent to client to be displayed .
-
-after firebase operaion , databse transactin is performed . agai this is done in a `trasaction.atomic` context block. we add a new entry into the listing table in the databse and then user is redireted bak to the index/ hoe page where they can see their newly added entry.This is decorated with the `login_required` decorator hence handles request from only authenticated users
-
-if case of error when submitting form  like missing fields or requiref information , user is redirected back to form with a flash message showing error message
+GET request to the post route hits this view function which returns the `post.html` template view which has a form to allow users to submit accomadation post details such as images, prices etc.
+When form is submitted, it is handled by this view fucntion. User details are checked and authenticated for validity. If this checks out, user submittted images are loaded from the `request.FILES` object and the uplaoded  to the storage bucket on firebase in a for loop incase user submitted multiple files. On every iteration a random sting is generated using acobination of 'user-listing' plus  current `date` and generated `uuid` number which is used as the image name in storage bucket. After uplaod we get url of uploaded file in the bucket and  append it to a list later to be converted to a formated list that can be split into seperate urls and sent to client to be displayed . This formatted list is stored in the databse as the lisitng url in the listing table. 
+After firebase operation, database transactin is performed. Again this is done in a `trasaction.atomic` context block. We add a new entry into the listing table in the databse and then user is redireted back to the index/home page where they can see their newly added entry.This is decorated with the `login_required` decorator hence handles request from only authenticated users.
+If case of error when submitting form like missing fields or required information, user is redirected back to form with a flash message showing error message.
 
 
 
 
 `stared and unstar`
 
-The stared  and  unstar view functions handle request from only authenticated users. a user has to have an account and logged in to be able to acces this feature. users can star listings they see which means the lisitng will be adde dto the users favourties. that is a new entry is created in the database under the `Listing_favourites` table and is linked to the user. users can then later view all thier stared lisitngs. the unstar view function on the other hand handles request tht removes stared listings from users favorites. post request sent to these routes are done via ajax calls using the javascript fetch api.
+The stared and unstar view functions handle request from only authenticated users. A user has to have an account and logged in to be able to access this feature. Users can star listings they see which means the lisiting will be added to the users favourties. That is a new entry is created in the database under the `Listing_favourites` table and is linked to the user. Users can then later view all their stared lisitngs. The unstar view function on the other hand handles request tht removes stared listings from users favorites. POST request sent to these routes are done via ajax calls using the javascript fetch api. Also both of these routes are csrf protected.
 
 
 
 `lisitng`
 
-the listing view function handles request sent to the lisiting route which contain an integer url parameter. the parameter is grabbed in the view functions and used as id to  retrieve a particular listing and return it.
-this view function returns a view template which renders extra inforamtion about a lisitng such as all images associiated eith it , loacation and contact information of user who listed it .
-This view fuction is hit usually  when user clicks  on a lisitng on the home page. This is not decorated with the `login_required` decorator becaue users both authenticated and not should be able to view information abaout a listing.
+The listing view function handles request sent to the listing route which contain an integer url parameter. The parameter is grabbed in the view function and used as id to retrieve a particular listing and returns it.
+This view function returns a view template which renders extra inforamtion about a lisitng such as all images associated with it, location and contact information of user who listed it.
+This view fuction is hit usually  when user clicks  on a lisitng on the home page. This is not decorated with the `login_required` decorator because users both authenticated and not should be able to view information abaout a listing.
 
 ## helpers.py
 
-the helpers.py contain utility fuctions that are abstarcted away from the views.py file. fucntions like `hanndle_post` that is used in the home view fucntion to hadle post request sent to the route to filter rensered listings 
+The helpers.py contain utility fuctions that are abstarcted away from the views.py file. Fuctions like `hanndle_post` that is used in the home view fucntion to handle POST request sent to the route to filter rendered listings.
+Also contains the `get_ad_count` function that calculates how many lisitings are available in a location and returns a dictionary of locations as keys and number of listings there as the value. This allows as to display the lisitng number for each location so users know. 
 
-also contains the a`add_count` fucntion that calculates how many lisitings are available in every location and returns a dictionaty of loacations as keys and number of listings there as the value. This allows as to display the lisitng account for each location so users know 
-
-
-there is also the `authenticat_post_form` fuction which is used in  the post view fuction to authenticate user submitted data before they are used. it involves checking for missing fields etc
+There is also the `authenticate_post_form` function which is used in the post view fuction to authenticate user submitted data before they are used. It involves checking for missing fields etc
 
 
 
 
 ## config.json and serviceAc.json
 
-these are files that contain firbase authentivation details . the contents of these files are used by the pyrebase module to establish connection with our firebas eapp in th cloud. without these we canot connect to our firebase account. the config.json contains a dictioanry object which is what is aminly required.however there is an approach where you can authenticate your backend as a service account which means request from your server has admin priviledges. this was you done have to pass in user tokens in other to have request to firebse acknowledged.
+These are files that contain firbase authentication details. The contents of these files are used by the pyrebase module to establish connection with our firebase app in th cloud. Without these we cannot connect to our firebase account. The config.json contains a dictionary object which is what is mainly required.However there is an approach where you can authenticate your backend as a service account which means request from your server has admin priviledges. other than that you have to pass in user tokens in other to have request to firebse acknowledged. This is how it was done in this project for reasons to be explained in the problems faced session.
 
 
 
 
-
-
-however during developemnt i ca, accrossa a bug when i try to use service account credentials by passing it in config.json dictionary object. my server gets authenticated as admin but the `put` method  that uplaods files to my storage bucket kept throwing an error coming from the pyrebase package source code  . i traced the error and was able to resolve it after researching it. i have made a pull request to the repository and im not usre when or whether it will be merged so for the purpose of this profect . is shall not authenticate as an admin and shall pass token when perfoming actions . this is to prevent insatnces where bugs are reproduced when the app is run by others 
 
 
 
 
 
 ## admin.py
-
-database models from `models.py` module are imported here and registered so they can be visible and edited  in the django admin pannel
+Database models from `models.py` module are imported here and registered so they can be visible and edited  in the django admin pannel. The app uses a total of  4 database models. There a `User` model which inherits from the abstract user class  and models for the lisitngs , user favourted listings etc 
 
 
 
 
 ## templates directory
-this contains the various view templates that are rendered and handles by view functions in the `views.py` file
+This contains the various view templates that are rendered and handles by view functions in the `views.py` file. These templates use the `layout.html` as a base template.
 
 
 ## static directory
-the static directory contains statics files like css file and  javascript file called `script.js`. the js file contains logic that sends AJAX calls to the backend and also document manuupulations code such as displaying spinners or changing contents of html files
+The static directory contains static files like css file and  javascript file called `script.js`. The js file contains logic that sends AJAX calls to the backend and also  does document manipulation  such as displaying spinners or changing contents of html files in response to certain events.
+The css files contain user defined styles in addition to bootstrap styles applied in html files .
 
-the css files contain user defined styles in addition to bootsrap styles applied in html files 
+
+
+
+## Problems faced and Challenges
+
+Dring developemnt i came, accross a a bug when i tried to use service account credentials by passing it in config.json dictionary object as indicated by the pyrebase documentaion.According to the docs  my server gets authenticated as admin and all security rules are ignored when request comes from the server but the `put` method  that uplaods files to my storage bucket kept throwing an error coming from the pyrebase package source code. I was able to trace the error and was able to resolve it after researching it.I have made a pull request to the repository and im not sure when or whether it will be merged so for the purpose of this project and to prevent situations where others are not able to run the application  is did authenticate as an admin  which was my desired approach . This would have made it easier and safe fro me knowing i had security rules that prevented request from ny other source excpet my server .I therefore  have to pass token when perfoming actions. To indicate that request are authenticated. tokens expire after an hour so in other to make sure , i always reefresh tokens before making the request.
+
+
+Also i realized the server will not start when there was no interent connection when service account credentials was provided. Im guessing from the error messages this was because as part of the initialization process , pyrebase was making some network calls to firebase , perharps to verify details and this needed internet connection. This was part of it but not the main reason i removed service account verification from the project.
+
+
+
+##  Distinctiveness and Complexity
+
+For reasons why i believe my project satisfies the distinctiveness and Complexity  requirements ,  the project is neither a social network nor a commerce site. I like to think of it in the category of accomadation and hotel. The app is fully mobile responsive and ofcourse is built with django. It uses a total of 4 database models and also incoorporate google's firebase  backend service .
+
+
+## How to run application
+
+The app can be run by first making sure all dependencies are available in the environment. the requirements to run this project are listed in the requirements.txt file in the project directory
+run `pip install -r requirements.txt`
+
+after that make sure youre in main project directory and  `python manage.py runserver` in terminal. 

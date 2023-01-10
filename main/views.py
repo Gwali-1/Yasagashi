@@ -266,7 +266,7 @@ def profile_settings(request):
             ##firebase storage
             user = firebase_auth.refresh(request.session["firebase_user"]["refreshToken"])
             image_name = f"-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
-            firebase_storage.child(f"profile/{image_name}").put(image)
+            firebase_storage.child(f"profile/{image_name}").put(image,user['idToken'])
             image_url = firebase_storage.child(f"profile/{image_name}").get_url(user['idToken'])
                 
             #database
@@ -346,7 +346,7 @@ def post(request):
         for image in request.FILES.getlist("image"):
             try:
                 image_name = f"user-listing-{datetime.datetime.now()}-{uuid.uuid1()}"
-                firebase_storage.child(f"accomodation_post/{image_name}").put(image)
+                firebase_storage.child(f"accomodation_post/{image_name}").put(image,user['idToken'])
                 urls.append(firebase_storage.child(f"accomodation_post/{image_name}").get_url(user['idToken']))
 
             except Exception as e:
@@ -437,7 +437,7 @@ def stared(request):
     return render(request,"main/stared.html",{"stared":stared,"profile":profile})
 
 
-
+@csrf_protect
 @login_required
 def unstar(request):
     if request.method == "POST":
