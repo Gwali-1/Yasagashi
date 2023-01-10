@@ -14,6 +14,14 @@ In contrast to using the firebase admin SDK, i used `pyrebase service` , a pytho
 Moving forward i shall discuss  the contents of various files in the poject and how the help in the overall functionality, like auth, storage, filtering of results in the front end etc.
 
 
+## How to run application
+
+The app can be run by first making sure all dependencies are available in the environment. The requirements to run this project are listed in the requirements.txt file in the project directory.
+* run `pip install -r requirements.txt` to install all dependencies
+after that make sure youre in main project directory and
+* run  `python manage.py runserver` in terminal. 
+
+
 
 
 ## main/\_\_init__.p
@@ -143,6 +151,12 @@ The static directory contains static files like css file and  javascript file ca
 The css files contain user defined styles in addition to bootstrap styles applied in html files .
 
 
+##  Distinctiveness and Complexity
+
+For reasons why i believe my project satisfies the distinctiveness and Complexity  requirements ,  the project is neither a social network nor a commerce site. I like to think of it in the category of accomadation and hotel. The app is fully mobile responsive and ofcourse is built with django. It uses a total of 4 database models and also incoorporate google's firebase  backend service .
+
+
+
 
 
 ## Problems faced and Challenges
@@ -154,14 +168,4 @@ Also i realized the server will not start when there was no interent connection 
 
 
 
-##  Distinctiveness and Complexity
 
-For reasons why i believe my project satisfies the distinctiveness and Complexity  requirements ,  the project is neither a social network nor a commerce site. I like to think of it in the category of accomadation and hotel. The app is fully mobile responsive and ofcourse is built with django. It uses a total of 4 database models and also incoorporate google's firebase  backend service .
-
-
-## How to run application
-
-The app can be run by first making sure all dependencies are available in the environment. the requirements to run this project are listed in the requirements.txt file in the project directory
-run `pip install -r requirements.txt`
-
-after that make sure youre in main project directory and  `python manage.py runserver` in terminal. 
