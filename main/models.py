@@ -70,13 +70,13 @@ class Listing_favourites(models.Model):
   
 
 
-#when you give cred
-class Agents_favourite(models.Model):
-    agent=models.ForeignKey(User,on_delete=models.CASCADE,related_name="faved_agents")
-    user=models.ForeignKey(User,on_delete=models.CASCADE)
+# #when you give cred
+# class Agents_favourite(models.Model):
+#     agent=models.ForeignKey(User,on_delete=models.CASCADE,related_name="faved_agents")
+#     user=models.ForeignKey(User,on_delete=models.CASCADE)
 
-    def __str__(self):
-        return f" Agent {self.user.username} cred  by {self.user.username}"
+#     def __str__(self):
+#         return f" Agent {self.user.username} cred  by {self.user.username}"
 
 
 

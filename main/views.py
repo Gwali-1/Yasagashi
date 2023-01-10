@@ -39,12 +39,15 @@ def home(request,page_num):
 
     if request.user.is_authenticated:
         listings = Listing.objects.all().order_by("-date_listed")
-        profile = Profile.objects.get(user=request.user)
-        fav_post = [x.listing for x in Listing_favourites.objects.filter(user=request.user)]
+
         #pagination
         pages = Paginator(listings,10)
         if page_num > pages.num_pages:
             return HttpResponseRedirect(reverse("index"))
+            
+        profile = Profile.objects.get(user=request.user)
+        fav_post = [x.listing for x in Listing_favourites.objects.filter(user=request.user)]
+       
         try:
             current_page = pages.get_page(page_num)
         except Exception as e:
