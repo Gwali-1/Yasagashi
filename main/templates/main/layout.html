@@ -51,7 +51,7 @@
 
 
                     <li class="nav-item  ">
-                        <a href="{% url 'profile' %}">
+                        <a href="{% url 'profile_settings' %}">
                             {% for prof in user.profile_info.all %}
                                 <img src="{{prof.profile_image}}" class="avatar" alt="">
                             {% endfor %}

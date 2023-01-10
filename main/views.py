@@ -15,15 +15,9 @@ from django.core.paginator import Paginator
 import json
 
 
-#
 
 
 
-
-
-
-
-USER_OBJ={}
 
 
 ## Create your views here.
@@ -262,7 +256,7 @@ def profile_settings(request):
             profile.primary_location = location
             profile.save()
 
-            return HttpResponseRedirect(reverse("profile"))
+            return HttpResponseRedirect(reverse("profile_settings"))
 
     
         image = request.FILES.get("image")
@@ -285,12 +279,12 @@ def profile_settings(request):
                 profile.contact = contact
                 profile.primary_location = location
                 profile.save()
-            return HttpResponseRedirect(reverse("profile"))
+            return HttpResponseRedirect(reverse("profile_settings"))
 
         except Exception as e:
             print(e)
             messages.info(request,"Something happened , try again later")
-            return HttpResponseRedirect(reverse("profile"))
+            return HttpResponseRedirect(reverse("profile_settings"))
         
     
     return render(request,"main/profile_settings.html",{"profile":profile})
@@ -321,7 +315,7 @@ def profile(request,id):
 
 
 
-
+@login_required
 def post(request):
 
     profile = Profile.objects.get(user=request.user)
@@ -351,7 +345,7 @@ def post(request):
         user = firebase_auth.refresh(request.session["firebase_user"]["refreshToken"])
         for image in request.FILES.getlist("image"):
             try:
-                image_name = f"{request.user.username}-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
+                image_name = f"user-listing-{datetime.datetime.now()}-{uuid.uuid1()}"
                 firebase_storage.child(f"accomodation_post/{image_name}").put(image)
                 urls.append(firebase_storage.child(f"accomodation_post/{image_name}").get_url(user['idToken']))
 
