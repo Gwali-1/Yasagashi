@@ -1,7 +1,7 @@
 # YASAGASHI
 
 Before i began this project, the capstone. I knew i wanted to try something different. Something i didnt  do  in any of the projects submitted throughout this course. Something that will present a bit of a challenge and not make it feel like i was making another django app like others i made. And thats when it hit me to add file management to this project,specifically images.I wanted to involve an external service like using firebase, for the closest i had come to working with images  was during the commerce where i displayed images on the page by refrencing urls of images found on the internet. This time i wanted to handle user submittted images myself, store them and manage refrences to them in a database. So i decided to make an accomadation listing web applcation, where users could list properties for sale or rent, add prices , locations , whether they came furnished or not  etc. I thought the application should also have filtering mechanisms to allow users to find specific listings quite easily and fast, say a filtering pannel where you could narrow down search results based on parameters like price range, accomadation type (rent or sale ) or even look at listings in only a specific locations.
-This was my idea for the capstone project and i happy i was able to bring it to live. I shall now take you through the project step by step while addressing some design choices, reasons for using an exteranl package , challenges faced and a general overview of how the application works and some of it's features. 
+This was my idea for the capstone project and i happy i was able to bring it to live. I shall now take you through the project step by step while addressing some design choices, reasons for using an exteranl package, challenges faced and a general overview of how the application works and some of it's features. 
 
 The resulting app as metioned above displays a list of accomodation listings  posted by users of the app. The index page where these listings are displayed are paginated to display 10 lisitngs per page. Every listing holds information such as its location, whether its for rent or sale, the price and links to the profile of user that posted (the user profile holds extra information about user such as email , phone etc). This feature to see user profile from listings is only possible if user has an account and is logged in ofcourse. The app has 2 modes for when a user is logged in and not. The app serves up the index page with listings. Users who are not logged in can use the app the same way minus certain features like adding lisitngs to favourites or viewing profiles of users who have posted accomadations.
 owners of listings have to abilty to remove them if they are no longer available too. 
@@ -20,6 +20,7 @@ The app can be run by first making sure all dependencies are available in the en
 * run `pip install -r requirements.txt` to install all dependencies
 after that make sure youre in main project directory and
 * run  `python manage.py runserver` in terminal. 
+
 
 
 
@@ -137,7 +138,7 @@ These are files that contain firbase authentication details. The contents of the
 
 
 ## admin.py
-Database models from `models.py` module are imported here and registered so they can be visible and edited  in the django admin pannel. The app uses a total of  4 database models. There a `User` model which inherits from the abstract user class  and models for the lisitngs , user favourted listings etc 
+Database models from `models.py` module are imported here and registered so they can be visible and edited  in the django admin pannel. The app uses a total of 4 database models. There a `User` model which inherits from the abstract user class  and models for the lisitngs , user favourted listings etc 
 
 
 
@@ -161,11 +162,10 @@ For reasons why i believe my project satisfies the distinctiveness and Complexit
 
 ## Problems faced and Challenges
 
-Dring developemnt i came, accross a a bug when i tried to use service account credentials by passing it in config.json dictionary object as indicated by the pyrebase documentaion.According to the docs  my server gets authenticated as admin and all security rules are ignored when request comes from the server but the `put` method  that uplaods files to my storage bucket kept throwing an error coming from the pyrebase package source code. I was able to trace the error and was able to resolve it after researching it.I have made a pull request to the repository and im not sure when or whether it will be merged so for the purpose of this project and to prevent situations where others are not able to run the application  is did authenticate as an admin  which was my desired approach . This would have made it easier and safe fro me knowing i had security rules that prevented request from ny other source excpet my server .I therefore  have to pass token when perfoming actions. To indicate that request are authenticated. tokens expire after an hour so in other to make sure , i always reefresh tokens before making the request.
+During developement i came, accross a a bug when i tried to use service account credentials by passing it in `config.json` dictionary object as indicated by the pyrebase documentaion.According to the docs  my server gets authenticated as admin and all security rules are ignored when request comes from the server but the `put` method that uplaods files to my storage bucket kept throwing an error coming from the pyrebase package source code. I was able to trace the error and was able to resolve it after researching it.I have made a pull request to the repository and im not sure when or whether it will be merged so for the purpose of this project and to prevent situations where others are not able to run the application , i did not authenticate server as an admin  which was my desired approach. This would have made it easier and safe for me knowing i had security rules that prevented request from any other source excpet my server .I therefore  have to pass token when perfoming actions. To indicate that request are authenticated. Token expire after an hour so in other to make sure , i always refresh tokens before making the request.
 
 
-Also i realized the server will not start when there was no interent connection when service account credentials was provided. Im guessing from the error messages this was because as part of the initialization process , pyrebase was making some network calls to firebase , perharps to verify details and this needed internet connection. This was part of it but not the main reason i removed service account verification from the project.
+Also i realized the server will not start when there was no interent connection when service account credentials was provided. My guess from the error messages is as part of the initialization process , pyrebase was making some network calls to firebase , perharps to verify details and this needed internet connection.This is only a problem if the app is run locally without network connection.
 
-
-
-
+## For staff
+The prject require a firebase app to be provisioned in firebase cloud to work. This will require setting up a firebase project and setting up storage and authentication but in other to make running of the project easy and prevent the need to create a firebase project all over agin i shall leave the conf.json file out of the gitignore file. This will allow the pyreabase package to succesfully initialize using the firebase app i created and also prevent certain error. There shall also be the `.env` file which contains some environmental variables like django secrete key , allowed host etc that are refrenced in the settings file.
