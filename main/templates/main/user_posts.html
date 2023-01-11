@@ -1,0 +1,75 @@
+{% extends "main/layout.html" %}
+
+
+
+{% block content %}
+<div class="container">
+    <input type="hidden" class="page_id" value="5">
+
+    <div class="container mb-3">
+        <button type="submit" onclick="history.back()" class="btn filter-btn btn-success  rounded">Back</button>
+      </div>
+
+      <h2 class="mb-4 lead">Your Posts </h2>
+
+    {% for listing in posts %}
+        <div class="row  mb-4  justify-content-center mt-4 ">
+           
+                <div class="col-md-4  p-3">
+                    <a href="{% url 'listing' listing.id %}" class="listing_item d-block watchlist-link border "> 
+                        <div class=" text-center">
+                            <img src="{{listing.image}}"  height="100" width="200" alt= "image">
+                        </div>
+                    
+                    </a>
+                </div>
+           
+            <div class="col-md-4 border border-secondary rounded ">
+                <div class="lead title">
+
+                    <div class="lead title">
+                        <div class="product-price">
+                            <p><span class="currency">GHC</span>{{listing.price}}</p>
+                        </div>
+                        <p class="product-description">{{listing.description}}</p>
+                        <p class="product-location text-muted">{{listing.location}}</p>
+                        <p class="listing-title date text-muted ">{{listing.date_listed}}</p>
+                        <div class="d-inline-flex">
+                                {% if listing.furnished %}
+                                    <h6><span class="  rounded-pill   badge text-bg-secondary">FURSNISHED</span></h6>
+                                {% else %}
+                                <h6><span class=" badge rounded-pill  text-bg-secondary">UNFURNISHED</span></h6>
+                                {% endif %}
+
+                                <h6><span class=" badge rounded-pill mx-1  text-bg-success">{{listing.accomodation_type}}</span></h6>
+            
+                        </div>
+                    </div>
+                </div>
+                <form action="" method="post">
+                    {%csrf_token%}
+                    <input hidden  value="{{listing.id}}" name=id>
+                    <button type="submit" class="btn btn-outline-danger">Delete</button>
+                </form>
+                
+            </div>
+        </div>
+
+    {% empty%}
+                    <div class="container p-4 ">
+
+                        <div class="alert alert-primary d-flex align-items-cente bg-theme" role="alert">
+                            <div class="p-5">
+                              You have not made any posts yet
+                            </div>
+                    </div>     
+    {% endfor %}
+
+
+
+    
+
+
+
+</div>
+{% endblock content %}
