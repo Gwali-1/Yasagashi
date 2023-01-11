@@ -41,11 +41,13 @@ This is where url paths enpoints and various view functions that handle request 
 The views.py contain mainly functionality for handle client request to the server. Here we define functions to handle request at specific routes in the app and return response to the client. There are various view functions for different url endpoints that handle request in this file. Some are decorated to handle request only  from users who are authenticated and some are also csrf protected. Database models from `models.py` file are imported here and are used to perform database transactions such as storing data collected from users or retrieving data to be returned to client in the functions.  some some of the view functions in this file include ... 
 
 `index`
+
 The `index` view function does only one thing and that is redirect user request to the `home` view function. 
 
 
 
 `home`
+
 The home view function handles both GET and POST requests. It is decorated with the `csrf_protect` decorator from the `django.views.decorators.csrf module`. This is because it handles post request from the client and this is to prevent cross site request forgery by ensuring a csrf token is included in the request. The `home` function handles request for both authenticated and unaunthenticated users. GET reques=t from users who are not signed in are handled the same as authenticated users. Difference is that response from unauthencated users exclude certain data like user favorited post and user profile information and this limits features in the front end.
 
 POST request from users are handled in the same way for both instances. POST request sent to this view function is to filter lisitng results .POST request sent include directives on what type of filtering to be done, the user requesting and depending on what info is needed to filter results. POST is sent from the client as an AJAX call using javascript fetch api with the csrf token specified in the header and payload is added to the request body.
