@@ -1,7 +1,7 @@
 {% extends 'main/layout.html' %}
 {% block content %}
 <input type="hidden" class="page_id" value="7">
-
+{% comment %} 
  <!-- flash_messages -->
  {% for message in messages %}
  <div class=" alert {{ message.tags }} alert-dismissible  text-center" role="alert">
@@ -9,7 +9,7 @@
  </button>
  {{ message | safe }}
  </div>
-{% endfor %}    
+{% endfor %}     {% endcomment %}
 
 
 <div class="row  " >

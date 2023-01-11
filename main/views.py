@@ -152,7 +152,7 @@ def signup(request):
                 new_profile = Profile.objects.create(user=valid_user)
                 new_profile.save()
                 login(request,valid_user)
-                messages.success(request,"account created")
+                messages.success(request,"account created, set up your profile")
                 password = confirm_password = ""
                 return HttpResponseRedirect(reverse("profile_settings"))
 
@@ -422,22 +422,23 @@ def stared(request):
             with transaction.atomic():
                 listing = Listing.objects.filter(id=request_data.get("id"))
 
-                already_in_favourites = Listing_favourites.objects.filter(listing=listing)
+                already_in_favourites = Listing_favourites.objects.filter(listing=listing[0])
 
                 if already_in_favourites:
-                    Listing_favourites.objects.get(listing=listing).delete()
+                    Listing_favourites.objects.get(listing=listing[0]).delete()
                     return JsonResponse({
                         "status":"ok",
                         "message":"removed  stared"
                     })
 
-                new_fav = Listing_favourites.objects.create(listing=listing,user=request.user)
+                new_fav = Listing_favourites.objects.create(listing=listing[0],user=request.user)
                 new_fav.save()
                 return JsonResponse({
                     "status":"ok",
                     "message":"listing stared"
                 })
         except Exception as e:
+            print(e)
             return JsonResponse({
                 "status":"error",
                 "message":"could not star listing"

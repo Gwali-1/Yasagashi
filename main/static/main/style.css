@@ -186,6 +186,17 @@ body{
     margin-top: -10px;
   }
   
+
+  .user-posts {
+    text-decoration: none;
+    font-weight: 500;
+    border: 1px solid;
+    padding: 10px;
+  }
+
+  .user-posts:hover{
+    background-color: #519705;
+  }
   /* div.scrollmenu a {
     display: inline-block;
     color: white;

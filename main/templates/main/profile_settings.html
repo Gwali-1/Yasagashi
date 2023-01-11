@@ -20,6 +20,10 @@
     <div class="col ">
         <div class=" form-profile  ">
             <h2 class="mb-4">Edit profile</h2>
+
+            <div class="mb-3" >
+              <a class="user-posts" href= "{% url 'user_posts' %}">Your Posts</a>
+            </div>
             <form action="" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="input-group mb-3">
@@ -70,7 +74,7 @@
 
                 
                 <button type="submit" class="btn filter-btn btn-success profile-save">Save</button>
-                <a href="{% url 'index' %}">home</a>
+                
                 
 
             </form>

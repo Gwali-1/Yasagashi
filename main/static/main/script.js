@@ -60,7 +60,6 @@ function starInit(){
 
 const starPost = function(ele){
 
-    
     fetch("/stared",{
         method:"POST",
         headers:{"X-CSRFToken":token},
@@ -76,7 +75,7 @@ const starPost = function(ele){
             }
         }
     }).catch(error => {
-        //passs
+        //pass
         
     })
 }
@@ -168,6 +167,28 @@ const updateContent  = function(Ads){
 
 
 
+const renderResults = function(result){
+       
+    if(result.listings.length  === 0){
+        container.innerHTML = noneFound;
+    return;
+    }
+
+    updateContent(result);
+
+}
+
+
+
+
+const showSpinner = function(){
+    container.innerHTML = `<div class="text-center mt-5 fs-2 text-success">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>`;
+    
+}
 
 
 
@@ -184,6 +205,8 @@ const updateContent  = function(Ads){
 
 
 
+
+//-------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -193,28 +216,8 @@ const updateContent  = function(Ads){
 if(pageId === 1){
 
     starInit();
+
     const usr = Number(document.querySelector(".userid").value)
-
-    const renderResults = function(result){
-       
-        if(result.listings.length  === 0){
-            container.innerHTML = noneFound;
-        return;
-        }
-
-        updateContent(result);
-
-    }
-
-    const showSpinner = function(){
-        container.innerHTML = `<div class="text-center mt-5 fs-2 text-success">
-        <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
-        </div>
-      </div>`;
-        
-    }
-
 
 
 
@@ -226,21 +229,20 @@ if(pageId === 1){
     
     
     
-        // if (Number.isNaN(min) || Number.isNaN(max)){
-        //     filterErr.style.display = "block"
-        //     filterErr.innerHTML = "Provide valid input"
-        //     return
-        // }
+        if (Number.isNaN(min) || Number.isNaN(max)){
+            filterErr.style.display = "block"
+            filterErr.innerHTML = "Provide valid input"
+            return
+        }
     
-        // if(max < min){
-        //     filterErr.style.display = "block"
-        //     filterErr.innerHTML = "Max value must be high than or equal to min "
-        //     return;
-        // }
+        if(max < min){
+            filterErr.style.display = "block"
+            filterErr.innerHTML = "Max value must be high than or equal to min "
+            return;
+        }
 
         showSpinner();
         
-    
         fetch("/home/page/1",{
             method:"POST",
             headers:{"X-CSRFToken":token},
@@ -253,23 +255,22 @@ if(pageId === 1){
         }).then(response => response.json()).then( result => {
     
             ///////////TODO
-            
             if (result.status === "error"){
                 filterErr.style.display = "block"
                 filterErr.innerHTML = "problem fetching results, make sure filter parameters are valid" 
                 return
             }
+
             renderResults(result);
             starInit();
       
 
         })
         .catch(error => {
-            filterErr.style.display = "block"
-            filterErr.innerHTML = "could not fetch results at this time" 
+            filterErr.style.display = "block";
+            filterErr.innerHTML = "could not fetch results at this time" ;
         
         });
-    
         
     }
     
@@ -279,7 +280,6 @@ if(pageId === 1){
     
     
     locationSelect.onchange = function(e){
-
        showSpinner();
         fetch("/home/page/1",{
             method:"POST",
@@ -290,14 +290,13 @@ if(pageId === 1){
                 location:this.value
             })
         }).then(response => response.json()).then(result =>{
-    
             //////////////TODO
             renderResults(result);
             starInit();
-            
-            
-        
-        }).catch(error => console.log(error))
+    
+        }).catch(error => {
+            //pass
+        })
     }
     
     
@@ -308,10 +307,8 @@ if(pageId === 1){
     saleRadioBtn.onchange = function(e){
         if(this.checked = true){
             if(rentRadioBtn.checked = true) rentRadioBtn.checked = false;
-
             showSpinner();
             
-    
             fetch("/home/page/1",{
                 method:"POST",
                 headers:{"X-CSRFToken":token},
@@ -320,11 +317,9 @@ if(pageId === 1){
                     user:usr
                 })
             }).then(response => response.json()).then(result => {
-    
                 ///TODO
                     renderResults(result);
                     starInit();
-
 
             }).catch(error => {
                 filterErr.style.display = "block"
@@ -344,9 +339,7 @@ if(pageId === 1){
     rentRadioBtn.onchange = function(e){
         if(this.checked = true){
             if(saleRadioBtn.checked = true) saleRadioBtn.checked = false;
-
             showSpinner();
-    
             fetch("/home/page/1",{
                 method:"POST",
                 headers:{"X-CSRFToken":token},
@@ -395,8 +388,6 @@ if(pageId === 1){
 
 
 
-
-
 if (pageId == 2){
     postListingForm.onsubmit = function(){
         postListingFormSpinner.innerHTML = `   <div class="text-center text-success">
@@ -405,8 +396,6 @@ if (pageId == 2){
         </div>
     </div>`;
     }
-
-
 
     imagePick.onchange = function(){
         imagePreview.style.display = "block"
@@ -462,5 +451,4 @@ if(pageId == 4){
         </div>
     </div>`;
     }
-
 }

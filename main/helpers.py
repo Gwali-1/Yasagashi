@@ -136,3 +136,13 @@ def get_ad_count(records):
         dict_count[x] += 1
 
     return dict_count
+
+
+
+
+
+
+
+# def add_lisitngs(data):
+#     for load in data:
+#         pass

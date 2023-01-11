@@ -5,20 +5,25 @@
 <div class="container">
     <input type="hidden" class="page_id" value="5">
 
+    <div class="container mb-3">
+      <button type="submit" onclick="history.back()" class="btn filter-btn btn-success  rounded">back</button>
+    </div>
+
+    <h2 class="mb-4 lead">Favourited Posts </h2>
     {% for listing in stared %}
     
-        <div class="row border align-items-center justify-content-center mt-4 ">
+        <div class="row   justify-content-center mt-4 ">
            
-                <div class="col-md-4 border p-3">
+                <div class="col-md-4  p-3">
                     <a href="{% url 'listing' listing.listing.id %}" class="listing_item d-block watchlist-link border "> 
                         <div class="border text-center">
-                            <img src="{{listing.listing.image}}"  height="200" width="300" alt= "image">
+                            <img src="{{listing.listing.image}}"  height="100" width="200" alt= "image">
                         </div>
                     
                     </a>
                 </div>
            
-            <div class="col-md-4 border ">
+            <div class="col-md-4 border border-secondary rounded  ">
                 <div class="lead title">
 
                     <div class="lead title">
