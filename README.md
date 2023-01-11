@@ -1,7 +1,7 @@
 # YASAGASHI(house-hunting)
 
-Before i began this project, the capstone. I knew i wanted to try something different. Something i didnt  do  in any of the projects submitted throughout this course. Something that will present a bit of a challenge and not make it feel like i was making another django app like others i made. And thats when it hit me to add file management to this project,specifically images.I wanted to involve an external service like firebase. The closest i had come to working with images  was during the commerce where i displayed images on the page by refrencing urls of images found on the internet. This time i wanted to handle user submittted images myself, store them and manage refrences to them in a database. So i decided to make an accomadation listing web applcation, where users could list properties for sale or rent, add prices , locations , whether they came furnished or not  etc. I thought the application should also have filtering mechanisms to allow users to find specific listings quite easily and fast, say a filtering pannel where you could narrow down search results based on parameters like price range, accomadation type (rent or sale ) or even look at listings in only a specific locations.
-.I shall now take you through the project step by step while addressing some design choices, reasons for using an external package, challenges faced and a general overview of how the application works and some of it's features. 
+Before i began this project, the capstone. I knew i wanted to try something different. Something i didn't  do  in any of the projects submitted throughout this course. Something that will present a bit of a challenge and not make it feel like i was making another django app like others i made. And thats when it hit me to add file management to this project,specifically images.I wanted to involve an external service like firebase. The closest i had come to working with images  was during the commerce where i displayed images on the page by refrencing urls of images found on the internet. This time i wanted to handle user submittted images myself, store them and manage refrences to them in a database. So i decided to make an accomodation listing web applcation, where users find or  could list properties for sale or rent, add prices , locations , whether they came furnished or not  etc. I thought the application should also have filtering mechanisms to allow users to find specific listings quite easily and fast, say a filtering pannel where you could narrow down search results based on parameters like price-range, accomodation type (rent or sale ) or even look at listings in only a specific locations.
+.I shall now go through the project step by step while addressing some design choices, reasons for using an external package(pyrebase), challenges faced and a general overview of how the application works and some of it's features. 
 
 The resulting app as metioned above displays a list of accomodation listings  posted by users of the app. The index page where these listings are displayed are paginated to display 10 lisitngs per page. Every listing holds information such as its location, whether its for rent or sale, the price and links to the profile of user that posted (the user profile holds extra information about user such as email , phone etc). This feature to see user profile from listings is only possible if user has an account and is logged in ofcourse. The app has 2 modes for when a user is logged in and not. The app serves up the index page with listings. Users who are not logged in can use the app the same way minus certain features like adding lisitngs to favourites or viewing profiles of users who have posted accomadations.
 Owners of listings have to abilty to view listings they made and remove them if they are no longer available too. 
@@ -34,7 +34,7 @@ So basically in this file i initialize the pyrebase object and generate the auth
 
 
 ## urls.py
-This is where url paths  enpoints and various view functions that handle request to them are defined.We create a list of url patterns  and the view functions that handle them in a list obect with name urlpatterns. The paths defined here like `/login`  or `/profile_settings` are linked the the view function that handle them in the `views.py` module.
+This is where url paths enpoints and various view functions that handle request to them are defined. We create a list of url patterns  and the view functions that handle them in a list obect with name urlpatterns. The paths defined here like `/login`  or `/profile_settings` are linked the the view function that handle them in the `views.py` module.
 
 ## views.py
 
@@ -138,7 +138,7 @@ These are files that contain firbase authentication details. The contents of the
 
 
 ## admin.py
-Database models from `models.py` module are imported here and registered so they can be visible and edited  in the django admin pannel. The app uses a total of 4 database models. There a `User` model which inherits from the abstract user class  and models for the lisitngs , user favourted listings etc 
+Database models from `models.py` module are imported here and registered so they can be visible and edited  in the django admin pannel. The app uses a total of 4 database models. There a `User` model which inherits from the abstract user class  and models for the lisitngs , user favourited listings etc 
 
 
 
@@ -148,13 +148,13 @@ This contains the various view templates that are rendered and handles by view f
 
 
 ## static directory
-The static directory contains static files like css file and  javascript file called `script.js`. The js file contains logic that sends AJAX calls to the backend and also  does document manipulation  such as displaying spinners or changing contents of html files in response to certain events.
+The static directory contains static files like css file and  javascript file called `script.js`. The js file contains logic that sends AJAX calls(like when user is filtering listings) to the backend and also  does document manipulation  such as displaying spinners or changing contents of html files in response to certain events.
 The css files contain user defined styles in addition to bootstrap styles applied in html files .
 
 
 ##  Distinctiveness and Complexity
 
-For reasons why i believe my project satisfies the distinctiveness and Complexity  requirements ,  the project is neither a social network nor a commerce site. I like to think of it in the category of accomadation and hotel. The app is fully mobile responsive and ofcourse is built with django. It uses a total of 4 database models and also incoorporate google's firebase  backend service .
+For reasons why i believe my project satisfies the distinctiveness and Complexity  requirements ,  the project is neither a social network nor a commerce site. I like to think of it in the category of accomadation and hotel. The app is fully mobile responsive and ofcourse is built with django. It uses a total of 4 database models and also incoorporate google's firebase  backend service to store and manage user generated files and login authentication.
 
 
 
@@ -162,10 +162,10 @@ For reasons why i believe my project satisfies the distinctiveness and Complexit
 
 ## Problems faced and Challenges
 
-During developement i came, accross a a bug when i tried to use service account credentials by passing it in `config.json` dictionary object as indicated by the pyrebase documentaion.According to the docs  my server gets authenticated as admin and all security rules are ignored when request comes from the server but the `put` method that uplaods files to my storage bucket kept throwing an error coming from the pyrebase package source code. I was able to trace the error and was able to resolve it after researching it.I have made a pull request to the repository and im not sure when or whether it will be merged so for the purpose of this project and to prevent situations where others are not able to run the application , i did not authenticate server as an admin  which was my desired approach. This would have made it easier and safe for me knowing i had security rules that prevented request from any other source excpet my server .I therefore  have to pass token when perfoming actions. To indicate that request are authenticated. Token expire after an hour so in other to make sure , i always refresh tokens before making the request.
+* During developement i came, accross a a bug when i tried to use service account credentials by passing it in `config.json` dictionary object as indicated by the pyrebase documentaion.According to the docs  my server gets authenticated as admin and all security rules are ignored when request comes from the server but the `put` method that uplaods files to my storage bucket kept throwing an error coming from the pyrebase package source code. I was able to trace the error and was able to resolve it after researching it.I have made a pull request to the repository and im not sure when or whether it will be merged so for the purpose of this project and to prevent situations where others are not able to run the application , i did not authenticate server as an admin  which was my desired approach. This would have made it easier and safe for me knowing i had security rules that prevented request from any other source excpet my server .I therefore  have to pass token when perfoming actions. To indicate that request are authenticated. Token expire after an hour so in other to make sure , i always refresh tokens before making the request.
 
 
-Also i realized the server will not start when there was no interent connection when service account credentials was provided. My guess from the error messages is as part of the initialization process , pyrebase was making some network calls to firebase , perharps to verify details and this needed internet connection.This is only a problem if the app is run locally without network connection.
+* Also i realized the server will not start when there was no interent connection when service account credentials was provided. My guess from the error messages is as part of the initialization process , pyrebase was making some network calls to firebase , perharps to verify details and this needed internet connection.This is only a problem if the app is run locally without network connection.
 
 ## For staff
 The project requires a firebase app to be provisioned in firebase cloud to work. This will require setting up a firebase project and setting up storage and authentication but in other to make running of the project easy and prevent the need to create a firebase project all over agin i shall leave the conf.json file out of the gitignore file. This will allow the pyreabase package to succesfully initialize using the firebase app i created and also prevent certain error. There shall also be the `.env` file which contains some environmental variables like django secrete key , allowed host etc that are refrenced in the settings file.
