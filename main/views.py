@@ -44,7 +44,7 @@ def home(request,page_num):
         pages = Paginator(listings,10)
         if page_num > pages.num_pages:
             return HttpResponseRedirect(reverse("index"))
-            
+
         profile = Profile.objects.get(user=request.user)
         fav_post = [x.listing for x in Listing_favourites.objects.filter(user=request.user)]
        
@@ -122,6 +122,8 @@ def signup(request):
        
             messages.error(request,"provide valid details")
             return render(request,"main/register.html")
+
+
         
         if User.objects.filter(email=email).exists():
             messages.error(request,"Account with this email already exist")
@@ -143,19 +145,20 @@ def signup(request):
 
         #database
         try:
-            new_user = User.objects.create_user(username,email,password)
-            new_user.save()
-            valid_user = authenticate(request,username=username,password=password)
-            new_profile = Profile.objects.create(user=valid_user)
-            new_profile.save()
-            login(request,valid_user)
-            messages.success(request,"account created")
-            password = confirm_password = ""
-            return HttpResponseRedirect(reverse("profile"))
+            with transaction.atomic():
+                new_user = User.objects.create_user(username,email,password)
+                new_user.save()
+                valid_user = authenticate(request,username=username,password=password)
+                new_profile = Profile.objects.create(user=valid_user)
+                new_profile.save()
+                login(request,valid_user)
+                messages.success(request,"account created")
+                password = confirm_password = ""
+                return HttpResponseRedirect(reverse("profile_settings"))
 
         except Exception as e:
             print(e)
-            messages.error(request,"could not add user")
+            messages.error(request,"could create user account at the moment")
             return HttpResponseRedirect(reverse("signup"))
     
         
@@ -183,7 +186,6 @@ def signup(request):
 
 def signin(request):
 
-
     if request.method == "POST":
         email = request.POST.get("email")
         password = request.POST.get("password")
@@ -201,7 +203,7 @@ def signin(request):
 
         check_user = authenticate(request,username=user.username,password=password)
         if check_user is None:
-            messages.error(request,"invalid email or password")
+            messages.error(request,"invalid email or password, check details")
             return HttpResponseRedirect(reverse("signin"))
 
 
@@ -236,14 +238,19 @@ def profile_settings(request):
     profile = Profile.objects.get(user=request.user)
 
 
-
     #authenticate user input
 
     if request.method == "POST":
-        if not request.session["firebase_user"]:
+        try:
+            if not request.session["firebase_user"]:
+                logout(request)
+                messages.info(request,"Log in to edit profile")
+                return HttpResponseRedirect(reverse("signin"))
+        except KeyError: #incase exception 
             logout(request)
             messages.info(request,"Log in to edit profile")
             return HttpResponseRedirect(reverse("signin"))
+
 
        
 
@@ -252,7 +259,6 @@ def profile_settings(request):
             location = request.POST.get("location")
             bio = request.POST.get("bio")
             contact = request.POST.get("contact")
-
             profile.contact =contact
             profile.profile_image = image
             profile.bio = bio
@@ -263,12 +269,10 @@ def profile_settings(request):
 
     
         image = request.FILES.get("image")
-        
-        
         try:
             ##firebase storage
             user = firebase_auth.refresh(request.session["firebase_user"]["refreshToken"])
-            image_name = f"-profile-{datetime.datetime.now()}-{uuid.uuid1()}"
+            image_name = f"profile-{datetime.datetime.now()}-{uuid.uuid1()}"
             firebase_storage.child(f"profile/{image_name}").put(image,user['idToken'])
             image_url = firebase_storage.child(f"profile/{image_name}").get_url(user['idToken'])
                 
@@ -282,10 +286,10 @@ def profile_settings(request):
                 profile.contact = contact
                 profile.primary_location = location
                 profile.save()
+
             return HttpResponseRedirect(reverse("profile_settings"))
 
         except Exception as e:
-            print(e)
             messages.info(request,"Something happened , try again later")
             return HttpResponseRedirect(reverse("profile_settings"))
         
@@ -320,13 +324,20 @@ def profile(request,id):
 
 @login_required
 def post(request):
-
     profile = Profile.objects.get(user=request.user)
+
     if request.method == "POST":
-        if not request.session["firebase_user"]:
+        try:
+            if not request.session["firebase_user"]:
+                logout(request)
+                messages.info(request,"Log in to make a post")
+                return HttpResponseRedirect(reverse("signin"))
+        except KeyError:
             logout(request)
             messages.info(request,"Log in to make a post")
             return HttpResponseRedirect(reverse("signin"))
+
+
 
 
         accomodation_type = request.POST.get("type")
@@ -340,9 +351,7 @@ def post(request):
             messages.error(request,"Fill in  all required fields")
             return HttpResponseRedirect(reverse("post"))
 
-        # if len(request.FILES.getlist < 2):
-        #     pass
-
+       
         #firebase
         urls = []
         user = firebase_auth.refresh(request.session["firebase_user"]["refreshToken"])
@@ -353,7 +362,6 @@ def post(request):
                 urls.append(firebase_storage.child(f"accomodation_post/{image_name}").get_url(user['idToken']))
 
             except Exception as e:
-                print(e)
                 messages.info(request, "could not add Listing , try again later")
                 return HttpResponseRedirect(reverse("post"))
 
@@ -412,7 +420,7 @@ def stared(request):
             })
         try:
             with transaction.atomic():
-                listing = Listing.objects.get(id=request_data.get("id"))
+                listing = Listing.objects.filter(id=request_data.get("id"))
 
                 already_in_favourites = Listing_favourites.objects.filter(listing=listing)
 
@@ -430,7 +438,6 @@ def stared(request):
                     "message":"listing stared"
                 })
         except Exception as e:
-            print(e)
             return JsonResponse({
                 "status":"error",
                 "message":"could not star listing"
@@ -476,7 +483,20 @@ def listing(request,id):
 
 
 
+#
+@login_required
+def user_posts(request):
+    if request.method == "POST":
+            try:
+                Listing.objects.filter(user=request.user, id= request.POST.get("id")).delete()
+                messages.success(request,"removed Listing")
+                return HttpResponseRedirect(reverse("user_posts"))
+            except Exception as e:
+                messages.error(request, "could not remove Listing")
+                return HttpResponseRedirect(reverse("user_posts"))
 
+    listing = Listing.objects.filter(user=request.user)
+    return render(request,"main/user_posts.html",{"posts":listing})
 
 
 
